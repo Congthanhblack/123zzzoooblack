@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tửu Lầu Đại Chiến - Farewell Special</title>
+    <title>Tửu Lầu Đại Chiến - Secret Farewell</title>
     <style>
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --gold: #FFD700;
             --text-color: #ffffff;
-            --accent: #e74c3c;
         }
 
         body {
@@ -31,7 +30,6 @@
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
-        /* KHU VỰC VÒNG QUAY */
         .wheels-container {
             display: flex;
             flex-wrap: wrap;
@@ -76,7 +74,6 @@
             text-transform: uppercase;
         }
 
-        /* BẢNG ĐIỀU KHIỂN */
         .control-panel { text-align: center; padding: 10px; }
 
         #result-box {
@@ -85,7 +82,7 @@
             border-radius: 12px;
             padding: 15px; margin: 0 auto 20px;
             width: 90%; max-width: 500px;
-            min-height: 80px;
+            min-height: 85px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center;
             animation: pulseBorder 2s infinite;
@@ -120,7 +117,6 @@
         .secondary-btn { background: #333; color: white; border: 1px solid #555; }
         .danger-btn { background: #c0392b; color: white; }
 
-        /* BỐ CỤC PHỤ */
         .info-grid {
             display: grid; grid-template-columns: 1fr; gap: 15px;
             width: 95%; max-width: 600px; margin: 30px auto 0;
@@ -131,7 +127,6 @@
         .rank-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #444; }
         #history-list { max-height: 150px; overflow-y: auto; font-size: 0.85rem; color: #aaa; }
         .money-display { font-size: 1.2rem; font-weight: bold; color: #2ecc71; margin-bottom: 10px; display: block; }
-
     </style>
 </head>
 <body>
@@ -186,9 +181,10 @@
     const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
     const males = ["NCT", "A Quả", "A Thi", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
 
-    // Biến điều khiển sự kiện E Hòa
-    let hoaHitCount = 0; // Đếm số lần quay trúng E Hòa
-    let hasHoaFarewellHappened = false;
+    // BIẾN ĐIỀU KHIỂN BÍ MẬT
+    let secretResetCount = 0; 
+    let forceHoaNext = false; 
+    let hasHoaFarewellDone = false; 
 
     const gifts = [
         { label: "Uống 1 chén", color: "#e74c3c", val: 1, wM: 35, wF: 10, funny: "Mời huynh đài nâng ly! 🍺" },
@@ -210,9 +206,7 @@
     let rotName = 0; rotGift = 0;
     let isSpinning = false;
 
-    function initStats() {
-        names.forEach(n => drinkStats[n] = 0);
-    }
+    function initStats() { names.forEach(n => drinkStats[n] = 0); }
     initStats();
 
     function drawWheel(canvasId, items) {
@@ -220,21 +214,16 @@
         const ctx = canvas.getContext('2d');
         const count = items.length;
         const arc = (2 * Math.PI) / count;
-        const size = 600; 
-        canvas.width = size; canvas.height = size;
+        const size = 600; canvas.width = size; canvas.height = size;
         const cx = size / 2; const cy = size / 2;
         const radius = size / 2 - 10;
-
         items.forEach((item, i) => {
             const angle = i * arc;
-            ctx.beginPath();
-            ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#34495e' : '#2c3e50') : item.color;
+            ctx.beginPath(); ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#34495e' : '#2c3e50') : item.color;
             ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, angle, angle + arc); ctx.lineTo(cx, cy); ctx.fill();
-            ctx.save();
-            ctx.translate(cx, cy); ctx.rotate(angle + arc / 2);
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle + arc / 2);
             ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 28px Arial"; 
-            ctx.fillText((typeof item === 'string' ? item : item.label), radius - 20, 10);
-            ctx.restore();
+            ctx.fillText((typeof item === 'string' ? item : item.label), radius - 20, 10); ctx.restore();
         });
     }
 
@@ -250,26 +239,27 @@
         return { item: gifts[0], index: 0 };
     }
 
-    const btn = document.getElementById('spinBtn');
-    const resultBox = document.getElementById('result-box');
-
     function spin() {
         if(isSpinning) return;
-        isSpinning = true; btn.disabled = true;
-        resultBox.innerHTML = `<div>Đang triệu hồi... 🌀</div>`;
+        isSpinning = true; 
+        document.getElementById('spinBtn').disabled = true;
+        secretResetCount = 0; // Reset đếm bí mật khi đã bấm quay
 
-        const nameIdx = Math.floor(Math.random() * names.length);
-        const selectedName = names[nameIdx];
-        
+        document.getElementById('result-box').innerHTML = `<div>Đang thỉnh ý bề trên... 🌀</div>`;
+
+        let nameIdx;
         let isFarewellEvent = false;
-        if (selectedName === "E Hòa") {
-            hoaHitCount++;
-            if (hoaHitCount === 3 && !hasHoaFarewellHappened) {
-                isFarewellEvent = true;
-                hasHoaFarewellHappened = true;
-            }
+
+        if (forceHoaNext && !hasHoaFarewellDone) {
+            nameIdx = names.indexOf("E Hòa");
+            isFarewellEvent = true;
+            forceHoaNext = false;
+            hasHoaFarewellDone = true; 
+        } else {
+            nameIdx = Math.floor(Math.random() * names.length);
         }
 
+        const selectedName = names[nameIdx];
         const isMale = males.includes(selectedName);
         const giftResult = getRandomGift(isMale); 
         const selectedGift = giftResult.item;
@@ -292,14 +282,14 @@
 
     function processFarewell(name) {
         lastAction = { name: name, drink: 0, money: 0, label: "FAREWELL" };
-        historyLog.unshift(`${name} ➔ Nhận lời chúc chia tay ❤️`);
-        resultBox.innerHTML = `
+        historyLog.unshift(`${name} ➔ Lời chúc chia tay ❤️`);
+        document.getElementById('result-box').innerHTML = `
             <div class="res-highlight" style="color:#ff69b4">${name} ❤️</div>
-            <div class="farewell-msg">Chúc em luôn xinh đẹp và rạng rỡ! Tìm được công việc tốt và sếp hiền hơn chỗ này nhé! ✨</div>
-            <div class="farewell-quest">Đặc quyền: Em hãy chọn 1 người làm giúp em 1 việc. Không làm được phạt 2 chén! 😈</div>
+            <div class="farewell-msg">Chúc em luôn xinh đẹp, rạng rỡ và gặt hái nhiều thành công trên hành trình mới! ✨</div>
+            <div class="farewell-quest">Đặc quyền: Chọn 1 người bất kỳ làm 1 việc theo ý em. Nếu từ chối, người đó phạt 2 chén! 😈</div>
         `;
         if (navigator.vibrate) navigator.vibrate([200, 100, 500]);
-        updateUI(); isSpinning = false; btn.disabled = false;
+        updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
     }
 
     function processResult(pName, pGift) {
@@ -308,12 +298,12 @@
         drinkStats[pName] += d; fund += m; if(fund < 0) fund = 0;
         lastAction = { name: pName, drink: d, money: m, label: pGift.label };
         historyLog.unshift(`${pName} ➔ ${pGift.label}`);
-        resultBox.innerHTML = `
+        document.getElementById('result-box').innerHTML = `
             <div class="res-highlight">${pName}</div>
             <div class="res-action" style="color:${pGift.color}">${pGift.label}</div>
             <div class="res-funny">${pGift.funny}</div>
         `;
-        updateUI(); isSpinning = false; btn.disabled = false;
+        updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
     }
 
     function updateUI() {
@@ -329,19 +319,36 @@
     }
 
     function resetGame() {
-        if(!confirm("Xóa trắng dữ liệu để bắt đầu lượt nhậu mới?")) return;
+        if(!confirm("Dọn dẹp bàn nhậu, bắt đầu hiệp mới?")) {
+            secretResetCount = 0;
+            return;
+        }
+        
+        secretResetCount++;
+        
+        // KIỂM TRA ĐIỀU KIỆN KÍCH HOẠT BÍ MẬT
+        if (secretResetCount === 3 && !hasHoaFarewellDone) {
+            forceHoaNext = true;
+            secretResetCount = 0;
+            // Gợi ý cực nhỏ thay cho Alert
+            document.getElementById('result-box').innerHTML = `
+                <div style="color:var(--gold); font-weight:bold">Gió đã đổi chiều...</div>
+                <div class="res-funny">Vận mệnh lượt tới đã được an bài!</div>
+            `;
+        } else {
+            document.getElementById('result-box').innerHTML = "<div>Đã làm mới đại hội!</div>";
+        }
+        
         fund = 200; historyLog = []; lastAction = null;
-        hoaHitCount = 0; hasHoaFarewellHappened = false;
         initStats(); updateUI();
-        resultBox.innerHTML = "<div>Đã làm mới đại hội!</div><div class='res-funny'>Hòa lại có cơ hội nhận quà lần 3 nhé!</div>";
     }
 
     function undoLast() {
         if (!lastAction) return;
         if(!confirm(`Hoàn tác kèo vừa rồi?`)) return;
+        if(lastAction.label === "FAREWELL") hasHoaFarewellDone = false;
         drinkStats[lastAction.name] -= lastAction.drink;
         fund -= lastAction.money;
-        if (lastAction.label === "FAREWELL") { hoaHitCount--; hasHoaFarewellHappened = false; }
         historyLog.shift(); lastAction = null; updateUI();
     }
 
