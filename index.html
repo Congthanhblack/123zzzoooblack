@@ -3,375 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tửu Lầu Đại Chiến - Mobile Optimized</title>
+    <title>Đệ Nhất Tửu Vương - v4 Reset Edition</title>
     <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --gold: #FFD700;
-            --text-color: #ffffff;
-        }
-
-        * { box-sizing: border-box; }
-
+        :root { --bg: #0b0b0b; --card: #161616; --gold: #FFD700; --text: #fff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 0 10px 50px 10px;
-            touch-action: manipulation;
-            overflow-x: hidden; /* Chống tràn ngang */
+            background: var(--bg); color: var(--text);
+            font-family: -apple-system, sans-serif; margin: 0; padding: 5px;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
 
-        h1 {
-            color: var(--gold);
-            text-align: center;
-            font-size: 1.4rem;
-            margin: 15px 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
+        h1 { color: var(--gold); text-align: center; font-size: 1.1rem; margin: 5px 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* KHU VỰC VÒNG QUAY - TỐI ƯU MOBILE */
+        .main-stage { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+
         .wheels-container {
-            display: flex;
-            flex-direction: column; /* Xếp dọc trên mobile */
-            align-items: center;
-            gap: 45px; /* Khoảng cách giữa 2 vòng */
-            margin-bottom: 40px;
+            display: flex; justify-content: center; gap: 8px; padding: 10px 0 20px 0;
         }
 
         .wheel-wrapper {
             position: relative;
-            width: 75vw; /* Thu nhỏ lại để không chạm mép màn hình */
-            max-width: 320px;
-            aspect-ratio: 1/1; 
-        }
-
-        /* Khi màn hình rộng (Tablet/PC) thì xếp ngang */
-        @media (min-width: 600px) {
-            .wheels-container { flex-direction: row; justify-content: center; gap: 30px; }
-            .wheel-wrapper { width: 40vw; }
+            width: 45vw; max-width: 170px;
+            aspect-ratio: 1/1;
         }
 
         canvas {
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+            width: 100% !important; height: 100% !important; border-radius: 50%;
+            border: 2px solid #444; box-shadow: 0 0 15px rgba(0,0,0,0.8);
             transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
         }
 
         .pointer {
-            position: absolute; top: -12px; left: 50%;
-            transform: translateX(-50%);
-            width: 25px; height: 35px;
-            background: #fff;
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            z-index: 10;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 18px; height: 24px; background: #fff;
+            clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
         }
 
         .wheel-label {
-            position: absolute; bottom: -30px; width: 100%;
-            text-align: center; color: var(--gold);
-            font-weight: bold; font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            position: absolute; bottom: -18px; width: 100%;
+            text-align: center; color: var(--gold); font-size: 0.6rem; font-weight: bold;
         }
-
-        /* BẢNG ĐIỀU KHIỂN */
-        .control-panel { text-align: center; margin-top: 10px; }
 
         #result-box {
-            background: var(--card-bg);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 12px; margin: 0 auto 15px;
-            width: 100%; max-width: 450px;
-            min-height: 80px;
+            background: var(--card); border: 1.5px solid #333;
+            border-radius: 8px; padding: 8px; margin: 10px 0;
+            width: 95%; max-width: 400px; min-height: 65px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            animation: pulseBorder 2s infinite;
-        }
-
-        @keyframes pulseBorder {
-            0%, 100% { box-shadow: 0 4px 10px rgba(255, 215, 0, 0.1); }
-            50% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4); }
+            text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
         
-        .res-highlight { color: var(--gold); font-weight: 900; font-size: 1.3rem; text-transform: uppercase; }
-        .res-action { font-size: 1.2rem; margin-top: 5px; font-weight: bold; }
-        .res-funny { font-size: 0.85rem; color: #aaa; font-style: italic; margin-top: 5px; }
+        .res-highlight { color: #5dade2; font-weight: bold; font-size: 1rem; text-transform: uppercase; }
+        .res-action { font-size: 1rem; color: #ec7063; font-weight: bold; margin-top: 2px; }
+        .res-funny { font-size: 0.75rem; color: #888; font-style: italic; }
+        .farewell-msg { color: #ff69b4; font-size: 0.8rem; font-weight: bold; line-height: 1.2; }
 
-        .farewell-msg { color: #ff69b4; font-weight: bold; font-size: 1rem; margin-top: 8px; line-height: 1.3; }
-        .farewell-quest { color: #2ecc71; font-style: italic; margin-top: 8px; border-top: 1px solid #444; padding-top: 5px; font-size: 0.85rem; }
-
-        .btn-group { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
-
-        button {
-            border: none; padding: 10px 15px; border-radius: 50px;
-            font-size: 0.85rem; font-weight: bold; cursor: pointer;
-        }
-
+        .controls { width: 100%; text-align: center; }
         #spinBtn {
             background: linear-gradient(135deg, #FFD700, #ff8c00);
-            color: black; padding: 14px; font-size: 1.1rem;
-            width: 90%; max-width: 280px; text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
-        }
-        #spinBtn:disabled { background: #555; color: #888; box-shadow: none; }
-
-        .secondary-btn { background: #333; color: white; border: 1px solid #555; }
-        .danger-btn { background: #c0392b; color: white; }
-
-        /* THÔNG TIN PHỤ */
-        .info-grid {
-            display: grid; grid-template-columns: 1fr; gap: 15px;
-            width: 100%; max-width: 500px; margin: 25px auto 0;
+            border: none; border-radius: 25px; padding: 12px 0;
+            font-weight: 900; font-size: 1rem; cursor: pointer; width: 85%; max-width: 280px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
-        .info-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border: 1px solid #333; }
-        h3 { margin: 0 0 8px 0; color: #bbb; font-size: 0.9rem; border-bottom: 1px solid #444; padding-bottom: 5px; }
-        .rank-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #333; font-size: 0.9rem; }
-        #history-list { max-height: 120px; overflow-y: auto; font-size: 0.8rem; color: #999; }
-        .money-display { font-size: 1.1rem; font-weight: bold; color: #2ecc71; margin-bottom: 10px; display: block; }
+        .btn-group { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+        .btn-group button { 
+            background: #222; color: #bbb; border: 1px solid #333; padding: 6px 12px; 
+            border-radius: 15px; font-size: 0.7rem; font-weight: bold;
+        }
+        .btn-group .danger { border-color: #500; color: #e74c3c; }
+
+        .scroll-area {
+            flex: 1; overflow-y: auto; margin-top: 12px;
+            padding: 5px; border-top: 1px solid #222;
+        }
+
+        .info-card { background: #111; border-radius: 6px; padding: 8px; margin-bottom: 8px; border: 1px solid #1a1a1a; }
+        h3 { font-size: 0.7rem; color: #555; margin: 0 0 5px 0; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .rank-item { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0; border-bottom: 1px dashed #222; }
+        #history-list { font-size: 0.75rem; color: #666; line-height: 1.4; }
     </style>
 </head>
 <body>
 
-    <h1>🍻 TỬU LẦU ĐẠI CHIẾN 🍻</h1>
+    <h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
 
-    <div class="control-panel">
-        <span class="money-display">Ngân Khố: <span id="fundAmount">200</span>k</span>
-    </div>
-
-    <div class="wheels-container">
-        <div class="wheel-wrapper">
-            <div class="pointer"></div>
-            <canvas id="canvasName"></canvas>
-            <div class="wheel-label">KẺ BỊ TRIỆU HỒI</div>
+    <div class="main-stage">
+        <div class="wheels-container">
+            <div class="wheel-wrapper">
+                <div class="pointer"></div>
+                <canvas id="canvasName"></canvas>
+                <div class="wheel-label">AI LÀ NẠN NHÂN?</div>
+            </div>
+            <div class="wheel-wrapper">
+                <div class="pointer"></div>
+                <canvas id="canvasGift"></canvas>
+                <div class="wheel-label">SỐ PHẬN RA SAO?</div>
+            </div>
         </div>
-        <div class="wheel-wrapper">
-            <div class="pointer"></div>
-            <canvas id="canvasGift"></canvas>
-            <div class="wheel-label">THÁNH CHỈ BAN XUỐNG</div>
-        </div>
-    </div>
 
-    <div class="control-panel">
         <div id="result-box">
-            <div>Đại tiệc bắt đầu!</div>
-            <div class="res-funny">Nhấn nút để tìm kẻ may mắn...</div>
+            <div class="res-funny">Nhấn nút QUAY để bắt đầu định đoạt!</div>
         </div>
-        
-        <button id="spinBtn">KHAI ĐAO 🔥</button>
-        
-        <div class="btn-group">
-            <button class="secondary-btn" onclick="undoLast()">⏪ Hoàn tác</button>
-            <button class="secondary-btn" onclick="editFund()">💰 Sửa quỹ</button>
-            <button class="danger-btn" onclick="resetGame()">🧹 Reset</button>
+
+        <div class="controls">
+            <button id="spinBtn">QUAY NGAY 🔥</button>
+            <div class="btn-group">
+                <button onclick="undoLast()">⏪ Hoàn tác</button>
+                <button onclick="editFund()">💰 Quỹ</button>
+                <button class="danger" onclick="resetGame()">🧹 Reset</button>
+            </div>
         </div>
     </div>
 
-    <div class="info-grid">
+    <div class="scroll-area">
         <div class="info-card">
-            <h3>🏆 BẢNG PHONG THẦN</h3>
+            <h3><span>🏆 BẢNG PHONG THẦN</span> <span style="color:#2ecc71">Quỹ: <span id="fundAmount">200</span>k</span></h3>
             <div id="rankList"></div>
-            <div style="margin-top:8px; text-align:right; font-size:0.8rem; color:#888" id="totalDrink">Tổng: 0 chén</div>
         </div>
         <div class="info-card">
             <h3>📜 NHẬT KÝ CHIẾN TRƯỜNG</h3>
-            <div id="history-list">Chưa có ai ngã ngựa...</div>
+            <div id="history-list">Chưa có dữ liệu...</div>
         </div>
     </div>
 
 <script>
-    // DATA CẤU HÌNH
     const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
     const males = ["NCT", "A Quả", "A Thi", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
 
-    let secretResetCount = 0; 
-    let forceHoaNext = false; 
-    let hasHoaFarewellDone = false; 
-
     const gifts = [
-        { label: "Uống 1 chén", color: "#e74c3c", val: 1, wM: 35, wF: 10, funny: "Mời huynh đài nâng ly! 🍺" },
-        { label: "Uống 2 chén", color: "#c0392b", val: 2, wM: 15, wF: 5,  funny: "Hảo tửu lượng! Dứt 2 chén! 😈" },
-        { label: "Uống 1/2", color: "#e67e22", val: 0.5, wM: 5, wF: 30, funny: "Nhấp môi lấy lệ thôi 😉" },
-        { label: "Uống hộ", color: "#1abc9c", val: 0, wM: 10, wF: 10, funny: "Huynh muốn hại ai? Chỉ ra đi! 👉" },
-        { label: "Full ly ☠️", color: "#8e44ad", val: 2, wM: 10, wF: 2,  funny: "Bác sĩ bảo cưới! (100% chén) 🤮" },
-        { label: "Chỉ định", color: "#9b59b6", val: 0, wM: 8, wF: 8,  funny: "Quyền sinh sát trong tay! 🗡️" },
-        { label: "Góp 10k", color: "#f39c12", money: -10, val: 0, wM: 5, wF: 5, funny: "Ting ting! Cảm ơn nhà tài trợ 💸" },
-        { label: "Góp 20k", color: "#f1c40f", money: -20, val: 0, wM: 5, wF: 5, funny: "Đại gia xuất hiện! Vỗ tay! 👏" },
-        { label: "Qua lượt", color: "#3498db", val: 0, wM: 5, wF: 15, funny: "Ăn ở tốt, thần men độ bạn 🙏" },
-        { label: "1 Phiếu Đổi", color: "#2ecc71", val: 0, wM: 5, wF: 15, funny: "Kim bài miễn tử! 🛡️" }
+        { label: "Uống 1 chén", color: "#e74c3c", val: 1, wM: 35, wF: 10, fun: "Cạn ly vì tình anh em! 🍺" },
+        { label: "Uống 2 chén", color: "#c0392b", val: 2, wM: 15, wF: 5,  fun: "Tửu lượng vô song! 😈" },
+        { label: "Uống 1/2", color: "#e67e22", val: 0.5, wM: 5, wF: 30, fun: "Nhấp môi làm duyên thôi. 😉" },
+        { label: "Uống hộ", color: "#1abc9c", val: 0, wM: 10, wF: 10, fun: "Muốn hại ai thì nói đi! 👉" },
+        { label: "Full ly ☠️", color: "#8e44ad", val: 2, wM: 10, wF: 2,  fun: "Trăm phần trăm không chừa! 🤮" },
+        { label: "Chỉ định", color: "#9b59b6", val: 0, wM: 8, wF: 8,  fun: "Quyền sinh sát trong tay! 🗡️" },
+        { label: "Góp 10k", color: "#f39c12", money: -10, val: 0, wM: 5, wF: 5, fun: "Ting ting! Vào quỹ 10k. 💸" },
+        { label: "Góp 20k", color: "#f1c40f", money: -20, val: 0, wM: 5, wF: 5, fun: "Đại gia đây rồi! Góp 20k. 👏" },
+        { label: "Qua lượt", color: "#3498db", val: 0, wM: 5, wF: 15, fun: "Thần men đã độ bạn! 🙏" },
+        { label: "1 Phiếu Đổi", color: "#2ecc71", val: 0, wM: 5, wF: 10, fun: "Kim bài miễn tử! 🛡️" }
     ];
 
-    let fund = 200; 
-    let drinkStats = {}; 
-    let historyLog = []; 
-    let lastAction = null; 
-    let rotName = 0; rotGift = 0;
-    let isSpinning = false;
+    let fund = 200, drinkStats = {}, historyLog = [], lastAction = null, isSpinning = false;
+    let secretCount = 0, forceHoa = false, hasHoaDone = false;
+    let rotName = 0, rotGift = 0;
 
-    function initStats() { names.forEach(n => drinkStats[n] = 0); }
-    initStats();
+    names.forEach(n => drinkStats[n] = 0);
 
-    // VẼ VÒNG QUAY
-    function drawWheel(canvasId, items) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        const count = items.length;
-        const arc = (2 * Math.PI) / count;
-        const size = 600; canvas.width = size; canvas.height = size;
-        const cx = size / 2; const cy = size / 2;
-        const radius = size / 2 - 10;
-        
+    function drawWheel(id, items) {
+        const cvs = document.getElementById(id), ctx = cvs.getContext('2d');
+        const count = items.length, arc = (Math.PI*2)/count, size = 500;
+        cvs.width = size; cvs.height = size;
         items.forEach((item, i) => {
             const angle = i * arc;
-            ctx.beginPath(); ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#34495e' : '#2c3e50') : item.color;
-            ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, angle, angle + arc); ctx.lineTo(cx, cy); ctx.fill();
-            ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle + arc / 2);
-            ctx.textAlign = "right"; ctx.fillStyle = "#fff"; 
-            ctx.font = "bold 26px Arial"; 
-            ctx.fillText((typeof item === 'string' ? item : item.label), radius - 20, 10); ctx.restore();
+            ctx.beginPath(); ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#1c2833' : '#273746') : item.color;
+            ctx.moveTo(250, 250); ctx.arc(250, 250, 245, angle, angle + arc); ctx.fill();
+            ctx.save(); ctx.translate(250, 250); ctx.rotate(angle + arc/2);
+            ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 24px Arial";
+            ctx.fillText(typeof item === 'string' ? item : item.label, 230, 10); ctx.restore();
         });
     }
 
-    // LOGIC RANDOM CÓ TRỌNG SỐ
-    function getRandomGift(isMale) {
-        let totalWeight = 0;
-        gifts.forEach(g => totalWeight += isMale ? g.wM : g.wF);
-        let random = Math.random() * totalWeight;
-        for (let i = 0; i < gifts.length; i++) {
-            let weight = isMale ? gifts[i].wM : gifts[i].wF;
-            if (random < weight) return { item: gifts[i], index: i };
-            random -= weight;
+    function getWeightedGift(isMale) {
+        let total = 0;
+        gifts.forEach(g => total += isMale ? g.wM : g.wF);
+        let r = Math.random() * total;
+        for (let g of gifts) {
+            let w = isMale ? g.wM : g.wF;
+            if (r < w) return g;
+            r -= w;
         }
-        return { item: gifts[0], index: 0 };
+        return gifts[0];
     }
 
-    // XỬ LÝ QUAY
     function spin() {
         if(isSpinning) return;
-        isSpinning = true; 
-        document.getElementById('spinBtn').disabled = true;
-        secretResetCount = 0; 
+        isSpinning = true; document.getElementById('spinBtn').disabled = true;
+        secretCount = 0; 
+        document.getElementById('result-box').innerHTML = "🌀 Đang triệu hồi nạn nhân...";
 
-        document.getElementById('result-box').innerHTML = `<div>Đang triệu hồi... 🌀</div>`;
+        let isFarewell = false;
+        let nIdx;
 
-        let nameIdx;
-        let isFarewellEvent = false;
-
-        if (forceHoaNext && !hasHoaFarewellDone) {
-            nameIdx = names.indexOf("E Hòa");
-            isFarewellEvent = true;
-            forceHoaNext = false;
-            hasHoaFarewellDone = true; 
+        if (forceHoa && !hasHoaDone) {
+            nIdx = names.indexOf("E Hòa");
+            isFarewell = true; forceHoa = false; hasHoaDone = true;
         } else {
-            nameIdx = Math.floor(Math.random() * names.length);
+            nIdx = Math.floor(Math.random()*names.length);
         }
 
-        const selectedName = names[nameIdx];
-        const isMale = males.includes(selectedName);
-        const giftResult = getRandomGift(isMale); 
-        const selectedGift = giftResult.item;
-        const giftIdx = giftResult.index;
+        const pName = names[nIdx];
+        const gift = getWeightedGift(males.includes(pName));
+        const gIdx = gifts.indexOf(gift);
 
-        const targetNameDeg = 270 - (nameIdx * (360/names.length) + (360/names.length)/2);
-        const targetGiftDeg = 270 - (giftIdx * (360/gifts.length) + (360/gifts.length)/2);
-
-        rotName += (360 * 6) + (targetNameDeg - (rotName % 360) + 360) % 360;
-        rotGift += (360 * 8) + (targetGiftDeg - (rotGift % 360) + 360) % 360;
+        rotName += (360*5) + (270 - (nIdx*(360/names.length) + (360/names.length)/2) - (rotName%360) + 360)%360;
+        rotGift += (360*7) + (270 - (gIdx*(360/gifts.length) + (360/gifts.length)/2) - (rotGift%360) + 360)%360;
 
         document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
         document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
 
         setTimeout(() => {
-            if (isFarewellEvent) processFarewell(selectedName);
-            else processResult(selectedName, selectedGift);
+            if (isFarewell) {
+                document.getElementById('result-box').innerHTML = `
+                    <div class="res-highlight" style="color:#ff69b4">${pName} ❤️</div>
+                    <div class="farewell-msg">Chúc em luôn xinh đẹp và rực rỡ trên chặng đường mới nhé! ✨</div>
+                    <div style="font-size:0.7rem; color:#2ecc71; margin-top:3px">Đặc quyền: Em chọn 1 người làm 1 việc giúp em!</div>
+                `;
+                historyLog.unshift(`${pName}: Lời chúc chia tay ❤️`);
+                lastAction = { type: 'FAREWELL' };
+            } else {
+                drinkStats[pName] += gift.val; fund += (gift.money || 0);
+                document.getElementById('result-box').innerHTML = `
+                    <div class="res-highlight">${pName}</div>
+                    <div class="res-action">${gift.label}</div>
+                    <div class="res-funny">${gift.fun}</div>
+                `;
+                historyLog.unshift(`${pName}: ${gift.label}`);
+                lastAction = { name: pName, drink: gift.val, money: (gift.money || 0) };
+            }
+            updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
         }, 5100);
-    }
-
-    function processFarewell(name) {
-        lastAction = { name: name, drink: 0, money: 0, label: "FAREWELL" };
-        historyLog.unshift(`${name} ➔ Lời chúc đặc biệt ❤️`);
-        document.getElementById('result-box').innerHTML = `
-            <div class="res-highlight" style="color:#ff69b4">${name} ❤️</div>
-            <div class="farewell-msg">Chúc em luôn xinh đẹp, rạng rỡ và tìm được công việc như ý ở chặng đường mới nhé! ✨</div>
-            <div class="farewell-quest">Đặc quyền: Em chọn 1 người làm 1 việc giúp em. Từ chối phạt 2 chén! 😈</div>
-        `;
-        if (navigator.vibrate) navigator.vibrate([200, 100, 500]);
-        updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
-    }
-
-    function processResult(pName, pGift) {
-        let d = pGift.val || 0; let m = pGift.money || 0;
-        if (pGift.label === "Uống hộ" || pGift.label === "Chỉ định") d = 1;
-        drinkStats[pName] += d; fund += m; if(fund < 0) fund = 0;
-        lastAction = { name: pName, drink: d, money: m, label: pGift.label };
-        historyLog.unshift(`${pName} ➔ ${pGift.label}`);
-        document.getElementById('result-box').innerHTML = `
-            <div class="res-highlight">${pName}</div>
-            <div class="res-action" style="color:${pGift.color}">${pGift.label}</div>
-            <div class="res-funny">${pGift.funny}</div>
-        `;
-        updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
     }
 
     function updateUI() {
         document.getElementById('fundAmount').innerText = fund;
-        const sorted = Object.entries(drinkStats).sort((a,b) => b[1] - a[1]);
-        document.getElementById('rankList').innerHTML = sorted.map((item, idx) => `
-            <div class="rank-item" style="${idx===0 && item[1]>0 ? 'color:var(--gold)' : ''}">
-                <span>${idx+1}. ${item[0]} ${idx===0 && item[1]>0 ? '👑' : ''}</span>
-                <span style="font-weight:bold">${item[1]} chén</span>
-            </div>`).join('');
-        document.getElementById('totalDrink').innerText = `Tổng: ${Object.values(drinkStats).reduce((a,b)=>a+b,0)} chén`;
-        document.getElementById('history-list').innerHTML = historyLog.map(h => `<div>➤ ${h}</div>`).join('');
+        const sorted = Object.entries(drinkStats).sort((a,b) => b[1]-a[1]);
+        document.getElementById('rankList').innerHTML = sorted.slice(0,5).map(i => `<div class="rank-item"><span>${i[0]}</span><b>${i[1]} chén</b></div>`).join('');
+        document.getElementById('history-list').innerHTML = historyLog.slice(0,10).map(h => `<div>• ${h}</div>`).join('');
     }
 
     function resetGame() {
-        if(!confirm("Reset toàn bộ dữ liệu đại hội?")) {
-            secretResetCount = 0;
-            return;
-        }
-        secretResetCount++;
-        if (secretResetCount === 3 && !hasHoaFarewellDone) {
-            forceHoaNext = true;
-            secretResetCount = 0;
-            document.getElementById('result-box').innerHTML = `
-                <div style="color:var(--gold); font-weight:bold">Gió đã đổi chiều...</div>
-                <div class="res-funny">Vận mệnh lượt tới đã được an bài!</div>
-            `;
+        if(!confirm("Dọn bàn làm lại từ đầu?")) { secretCount = 0; return; }
+        secretCount++;
+        // CẬP NHẬT: THAY ĐỔI TỪ 3 LẦN THÀNH 4 LẦN RESET
+        if(secretCount === 4 && !hasHoaDone) {
+            forceHoa = true; secretCount = 0;
+            document.getElementById('result-box').innerHTML = "<div style='color:var(--gold); font-weight:bold'>Gió đã đổi chiều... 🌬️</div><div class='res-funny'>Vận mệnh lượt tới đã được an bài!</div>";
         } else {
-            document.getElementById('result-box').innerHTML = "<div>Đã làm mới đại hội!</div>";
+            document.getElementById('result-box').innerHTML = "<div>Đại hội đã làm mới!</div>";
+            fund = 200; historyLog = []; names.forEach(n => drinkStats[n]=0); updateUI();
         }
-        fund = 200; historyLog = []; lastAction = null;
-        initStats(); updateUI();
     }
 
-    function undoLast() {
-        if (!lastAction) return;
-        if(!confirm(`Hoàn tác kèo vừa rồi?`)) return;
-        if(lastAction.label === "FAREWELL") hasHoaFarewellDone = false;
-        drinkStats[lastAction.name] -= lastAction.drink;
-        fund -= lastAction.money;
+    function undoLast() { 
+        if(!lastAction || !confirm("Hoàn tác lượt vừa rồi?")) return;
+        if(lastAction.type !== 'FAREWELL') {
+            drinkStats[lastAction.name] -= lastAction.drink;
+            fund -= lastAction.money;
+        } else { hasHoaDone = false; }
         historyLog.shift(); lastAction = null; updateUI();
     }
 
-    function editFund() {
-        const cur = prompt("Sửa quỹ (K):", fund);
-        if (cur !== null && !isNaN(cur)) { fund = parseInt(cur); updateUI(); }
+    function editFund() { 
+        let n = prompt("Nhập số quỹ mới (K):", fund); 
+        if(n !== null && !isNaN(n)) { fund = parseInt(n); updateUI(); }
     }
 
-    window.onload = () => {
-        drawWheel('canvasName', names);
-        drawWheel('canvasGift', gifts);
-        updateUI();
-        document.getElementById('spinBtn').onclick = spin;
+    window.onload = () => { 
+        drawWheel('canvasName', names); 
+        drawWheel('canvasGift', gifts); 
+        updateUI(); 
+        document.getElementById('spinBtn').onclick = spin; 
     };
 </script>
 </body>
