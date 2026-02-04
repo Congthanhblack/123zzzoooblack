@@ -3,98 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tửu Vương V10 - Bản Chuẩn</title>
+    <title>Tửu Vương V11 - Logic Cân Bằng</title>
     <style>
         :root {
-            --gold: #ffcc00; --bg: #0f0f13; --card: #1c1c24; --text: #eee;
+            --gold: #ffcc00; --bg: #0d0d10; --card: #1a1a20; --text: #eee;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
             background: var(--bg); color: var(--text);
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0; padding: 0;
-            height: 100dvh; /* Sử dụng dvh để khớp chính xác màn hình điện thoại */
-            display: flex; flex-direction: column; overflow: hidden;
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* 1. HEADER GỌN NHẤT CÓ THỂ */
+        /* 1. HEADER GỌN */
         header {
             flex: 0 0 auto;
-            padding: 5px 15px; background: #1a1a20;
+            padding: 8px 15px; background: #16161c;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #333;
         }
-        header h1 { font-size: 0.9rem; margin: 0; color: var(--gold); }
-        .fund-box { font-weight: bold; color: #2ed573; font-size: 1rem; }
+        header h1 { font-size: 0.9rem; margin: 0; color: var(--gold); letter-spacing: 1px; }
+        .fund-box { font-weight: bold; color: #2ed573; font-size: 1.1rem; }
 
-        /* 2. KHU VỰC VÒNG QUAY - ĐẨY LÊN CAO */
+        /* 2. KHU VỰC VÒNG QUAY - ĐÃ HẠ THẤP XUỐNG 2 DÒNG (PADDING-TOP) */
         .stage {
             flex: 1 1 auto;
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 10px; gap: 8px;
+            display: flex; justify-content: center; 
+            align-items: flex-start; 
+            padding-top: 50px; /* Hạ thấp xuống khoảng 2 dòng */
+            gap: 12px;
+            position: relative;
         }
         .wheel-wrap {
             position: relative;
-            width: 47vw; max-width: 38vh; /* Thu nhỏ hơn một chút để chừa chỗ cho nút */
+            width: 46vw; max-width: 36vh; 
             aspect-ratio: 1/1;
         }
         canvas {
             width: 100%; height: 100%; border-radius: 50%;
-            border: 2px solid #444;
+            border: 3px solid #2a2a32;
             transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .pointer {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 20px; height: 26px; background: #fff;
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 30px; background: #fff;
             clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
         .tag {
-            position: absolute; bottom: -18px; width: 100%;
-            text-align: center; font-size: 0.7rem; color: #888; font-weight: bold;
+            position: absolute; bottom: -22px; width: 100%;
+            text-align: center; font-size: 0.75rem; color: #666; font-weight: bold;
         }
 
-        /* 3. KHU VỰC ĐIỀU KHIỂN - ĐẢM BẢO LUÔN THẤY */
+        /* 3. ĐIỀU KHIỂN */
         .controls {
             flex: 0 0 auto;
             background: var(--card);
-            padding: 10px 15px;
-            border-radius: 15px 15px 0 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
-            display: flex; flex-direction: column; gap: 8px;
+            padding: 15px;
+            border-radius: 20px 20px 0 0;
+            display: flex; flex-direction: column; gap: 10px;
         }
 
-        #intro-txt { text-align: center; font-size: 0.8rem; color: #aaa; font-style: italic; min-height: 1.1rem; }
+        #intro-txt { text-align: center; font-size: 0.85rem; color: #888; min-height: 1.2rem; }
         
         #result-box {
-            text-align: center; min-height: 45px;
+            text-align: center; min-height: 50px;
             display: flex; flex-direction: column; justify-content: center;
+            border-top: 1px solid #333; padding-top: 5px;
         }
-        .res-main { font-weight: 800; font-size: 1.1rem; color: var(--gold); }
-        .res-joke { font-size: 0.75rem; color: #888; margin-top: 2px; }
+        .res-main { font-weight: 800; font-size: 1.2rem; color: var(--gold); }
+        .res-joke { font-size: 0.8rem; color: #aaa; font-style: italic; }
 
         .btn-main {
-            background: linear-gradient(135deg, #ffcc00, #f39c12);
-            border: none; padding: 14px; border-radius: 10px;
-            color: #000; font-weight: bold; font-size: 1.1rem;
-            width: 100%; box-shadow: 0 4px 0 #a36200;
+            background: linear-gradient(135deg, #f1c40f, #e67e22);
+            border: none; padding: 15px; border-radius: 12px;
+            color: #000; font-weight: 900; font-size: 1.1rem;
+            width: 100%; box-shadow: 0 4px 0 #9e6d00;
+            text-transform: uppercase;
         }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #a36200; }
+        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #9e6d00; }
         .btn-main:disabled { filter: grayscale(1); opacity: 0.5; }
 
-        .btn-row { display: flex; gap: 8px; }
+        .btn-row { display: flex; gap: 10px; }
         .btn-sub {
-            flex: 1; background: #333; border: 1px solid #444; color: #ccc;
-            padding: 8px; border-radius: 6px; font-size: 0.8rem;
+            flex: 1; background: #2d2d36; border: 1px solid #444; color: #bbb;
+            padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: bold;
         }
 
-        /* POPUP */
         .modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
             z-index: 100; align-items: center; justify-content: center;
         }
         .modal-content {
-            background: var(--card); padding: 20px; border-radius: 12px;
+            background: var(--card); padding: 25px; border-radius: 15px;
             width: 85%; max-width: 320px; border: 1px solid var(--gold);
         }
     </style>
@@ -102,7 +106,7 @@
 <body>
 
     <header>
-        <h1>V10 - NHÂN PHẨM VƯƠNG</h1>
+        <h1>V11 - LOGIC CÂN BẰNG</h1>
         <div class="fund-box">QUỸ: <span id="fund">200</span>K</div>
     </header>
 
@@ -110,7 +114,7 @@
         <div class="wheel-wrap">
             <div class="pointer"></div>
             <canvas id="cvName"></canvas>
-            <div class="tag">AI TIẾP THEO?</div>
+            <div class="tag">BẢN LĨNH</div>
         </div>
         <div class="wheel-wrap">
             <div class="pointer"></div>
@@ -120,10 +124,10 @@
     </div>
 
     <div class="controls">
-        <div id="intro-txt">"Đây là vòng quay nhân phẩm, bạn tự tin chứ?"</div>
+        <div id="intro-txt">"Nhân phẩm tốt, rượu sẽ bớt nồng..."</div>
         
         <div id="result-box">
-            <div class="res-main" id="resText">Sẵn sàng nhập tiệc!</div>
+            <div class="res-main" id="resText">Bắt đầu tiệc!</div>
             <div class="res-joke" id="resJoke"></div>
         </div>
 
@@ -138,48 +142,51 @@
     <div id="menuModal" class="modal">
         <div class="modal-content">
             <h3 style="text-align:center; color:var(--gold); margin-top:0">CÀI ĐẶT</h3>
-            <div id="rankings" style="max-height:150px; overflow-y:auto; margin-bottom:15px; font-size:0.9rem"></div>
-            <button class="btn-sub" style="width:100%; margin-bottom:8px" onclick="editPlayers()">Đổi người chơi</button>
-            <button class="btn-sub" style="width:100%; margin-bottom:8px" onclick="editFund()">Sửa tiền quỹ</button>
+            <div id="rankings" style="max-height:180px; overflow-y:auto; margin-bottom:15px; font-size:0.9rem"></div>
+            <button class="btn-sub" style="width:100%; margin-bottom:10px; color:var(--gold)" onclick="editPlayers()">👥 Thêm/Đổi người chơi</button>
+            <button class="btn-sub" style="width:100%; margin-bottom:10px" onclick="editFund()">💰 Sửa tiền quỹ</button>
             <button class="btn-main" style="width:100%; font-size:0.9rem" onclick="toggleMenu()">ĐÓNG</button>
         </div>
     </div>
 
 <script>
-    // --- CẤU HÌNH DỮ LIỆU ---
+    // --- DỮ LIỆU ---
     let names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "Sơn", "Thao"];
     const gifts = [
         { label: "1 Chén", color: "#e74c3c", val: 1, fund: 0, weight: 8 },
         { label: "2 Chén", color: "#c0392b", val: 2, fund: 0, weight: 4 },
-        { label: "50% Ly", color: "#e67e22", val: 0.5, fund: 0, weight: 5 },
+        { label: "50% Ly", color: "#e67e22", val: 0.5, fund: 0, weight: 6 },
         { label: "Chỉ định", color: "#9b59b6", val: 0, fund: 0, weight: 3 },
         { label: "Góp 20k", color: "#f1c40f", val: 0, fund: 20, weight: 2 },
-        { label: "Lì xì 10k", color: "#2ecc71", val: 0, fund: -10, weight: 2 },
-        { label: "Lì xì 20k", color: "#27ae60", val: 0, fund: -20, weight: 1 },
+        { label: "Lì xì 20k", color: "#2ecc71", val: 0, fund: -20, weight: 1.5 },
         { label: "Qua lượt", color: "#3498db", val: 0, fund: 0, weight: 2 }
     ];
 
     const drinkJokes = [
         "Rượu bất khả ép, nhưng ép thì phải uống!",
-        "Tửu lượng là do trời phú, còn uống là do số đen.",
-        "Đừng trách vòng quay, hãy trách bàn tay bạn quay.",
-        "Bản lĩnh nằm ở đáy ly, cố lên anh em!",
-        "Một chén này, cả bàn ghi công!"
-    ];
-    const introQuotes = [
-        "Vòng quay nhân phẩm, bạn có tự tin...?",
-        "Ai run tay thì xin mời ra ngoài!",
-        "Vòng quay không nói dối, chỉ có người say mới nói dối!",
-        "Đừng nhìn tôi, hãy nhìn vào định mệnh của bạn."
+        "Tửu lượng do trời, chén này do bạn.",
+        "Đừng nhìn vòng quay, hãy nhìn vào đáy ly!",
+        "Bản lĩnh nằm ở chén này, cố lên!",
+        "Một chén này, tình cảm đi lên!"
     ];
 
     let fund = 200, drinkStats = {}, nameBag = [], giftBag = [], rotN = 0, rotG = 0, lastLog = null;
 
-    // --- THUẬT TOÁN TÚI (BAG) ---
-    function fillBags() {
-        nameBag = []; names.forEach(n => { nameBag.push(n); nameBag.push(n); });
-        giftBag = []; gifts.forEach(g => { for(let i=0; i<g.weight; i++) giftBag.push(g); });
+    // --- THUẬT TOÁN TÚI & CÂN BẰNG XÁC SUẤT ---
+    function initBag() {
+        // Tên: Mỗi người chơi đều có đúng 2 phiếu trong túi bất kể số lượng bao nhiêu
+        nameBag = [];
+        names.forEach(n => {
+            nameBag.push(n);
+            nameBag.push(n);
+        });
         nameBag.sort(() => Math.random() - 0.5);
+
+        // Quà: Dựa trên trọng số (Weight)
+        giftBag = [];
+        gifts.forEach(g => {
+            for(let i=0; i<g.weight; i++) giftBag.push(g);
+        });
         giftBag.sort(() => Math.random() - 0.5);
     }
 
@@ -189,22 +196,24 @@
         if(btn.disabled) return;
         btn.disabled = true;
 
-        if(!nameBag.length || !giftBag.length) fillBags();
+        // Nếu túi rỗng, tự động làm mới để đảm bảo chu kỳ mới
+        if(!nameBag.length || !giftBag.length) initBag();
         
         const targetName = nameBag.pop();
         const targetGift = giftBag.pop();
 
         const nIdx = names.indexOf(targetName);
         const gIdx = gifts.findIndex(g => g.label === targetGift.label);
-        const nSlice = 360/names.length, gSlice = 360/gifts.length;
+        const nSlice = 360/names.length;
+        const gSlice = 360/gifts.length;
 
-        // Quay ít nhất 6 vòng
-        rotN = (rotN - (rotN%360)) + 2160 + (270 - (nIdx*nSlice) - nSlice/2);
-        rotG = (rotG - (rotG%360)) + 2160 + (270 - (gIdx*gSlice) - gSlice/2);
+        // Quay ít nhất 5 vòng + góc dừng chuẩn xác
+        rotN = (rotN - (rotN%360)) + 1800 + (270 - (nIdx*nSlice) - nSlice/2);
+        rotG = (rotG - (rotG%360)) + 1800 + (270 - (gIdx*gSlice) - gSlice/2);
 
         document.getElementById('cvName').style.transform = `rotate(${rotN}deg)`;
         document.getElementById('cvGift').style.transform = `rotate(${rotG}deg)`;
-        document.getElementById('intro-txt').innerText = "🌀 Số phận đang được quyết định...";
+        document.getElementById('intro-txt').innerText = "🌀 Vận mệnh đang xoay vần...";
 
         setTimeout(() => {
             if(targetGift.val > 0) drinkStats[targetName] += targetGift.val;
@@ -212,38 +221,45 @@
             
             lastLog = { name: targetName, gift: targetGift };
             
-            // Hiển thị kết quả & Câu nói hài hước
             let joke = "";
             if(targetGift.val > 0) joke = drinkJokes[Math.floor(Math.random()*drinkJokes.length)];
             else if(targetGift.fund > 0) joke = "Tiền là phù du, nộp quỹ là nghĩa vụ!";
-            else if(targetGift.fund < 0) joke = "Nhân phẩm đại bộc phát! Lì xì về túi.";
-            else joke = "Thoát nạn ngoạn mục!";
+            else if(targetGift.fund < 0) joke = "Quỹ đang mỉm cười với bạn! Lì xì trao tay.";
+            else joke = "Thần may mắn đã độ bạn!";
 
             document.getElementById('resText').innerHTML = `${targetName} ➔ <span style="color:${targetGift.color}">${targetGift.label}</span>`;
             document.getElementById('resJoke').innerText = `"${joke}"`;
-            document.getElementById('intro-txt').innerText = introQuotes[Math.floor(Math.random()*introQuotes.length)];
             
             updateUI();
             btn.disabled = false;
         }, 4100);
     }
 
-    // --- UI HELPERS ---
+    // --- VẼ & CẬP NHẬT (XỬ LÝ TỰ ĐỘNG KHI THÊM TÊN) ---
     function draw(id, items) {
         const cv = document.getElementById(id);
         const ctx = cv.getContext('2d');
-        const count = items.length; const arc = 2*Math.PI/count;
+        const count = items.length;
+        const arc = 2*Math.PI/count;
         cv.width = 600; cv.height = 600;
+
         items.forEach((it, i) => {
             const ang = i*arc;
             ctx.beginPath(); ctx.moveTo(300, 300); ctx.arc(300,300,295, ang, ang+arc);
+            // Màu sắc xen kẽ cho tên
             ctx.fillStyle = (typeof it === 'string') ? (i%2?'#1c1c24':'#252530') : it.color;
-            ctx.fill(); ctx.strokeStyle = "#444"; ctx.stroke();
+            ctx.fill(); ctx.strokeStyle = "#444"; ctx.lineWidth = 1; ctx.stroke();
+            
             ctx.save(); ctx.translate(300, 300); ctx.rotate(ang + arc/2);
-            ctx.textAlign="right"; ctx.fillStyle="#fff"; ctx.font="bold 32px Arial";
+            ctx.textAlign="right"; ctx.fillStyle="#fff"; 
+            // Tự động chỉnh cỡ chữ nếu tên quá nhiều
+            const fontSize = count > 10 ? 24 : 32;
+            ctx.font=`bold ${fontSize}px Arial`;
+            
             let txt = (typeof it === 'string') ? it : it.label;
-            if(txt.includes("Lì xì")) txt = txt.replace("Lì xì ","+");
+            if(txt.includes("Lì xì")) txt = "+" + txt.split(" ")[2];
             if(txt.includes("Góp")) txt = "-20k";
+            
             ctx.fillText(txt, 270, 10); ctx.restore();
         });
     }
@@ -252,11 +268,40 @@
         document.getElementById('fund').innerText = fund;
         let html = "";
         Object.entries(drinkStats).sort((a,b)=>b[1]-a[1]).forEach(([n,v],i) => {
-            html += `<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #333">
-                <span>${i+1}. ${n}</span> <span style="color:var(--gold)">${v} chén</span>
+            html += `<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #333">
+                <span>${i+1}. ${n}</span> <span style="color:var(--gold);font-weight:bold">${v} chén</span>
             </div>`;
         });
-        document.getElementById('rankings').innerHTML = html || "Chưa có ai uống...";
+        document.getElementById('rankings').innerHTML = html || "Chưa ai uống...";
+    }
+
+    function editPlayers() {
+        let v = prompt("Thêm/Sửa tên các chiến hữu (cách nhau dấu phẩy):", names.join(", "));
+        if(v) {
+            names = v.split(",").map(x=>x.trim()).filter(x=>x);
+            // Khởi tạo điểm cho người mới mà không làm mất điểm người cũ
+            names.forEach(n => { if(drinkStats[n] === undefined) drinkStats[n] = 0; });
+            initBag(); // Quan trọng: Reset túi để chia lại xác suất cân bằng
+            draw('cvName', names);
+            updateUI();
+        }
+    }
+
+    function editFund() {
+        let v = prompt("Nhập số tiền quỹ hiện tại (k):", fund);
+        if(v && !isNaN(v)) { fund = parseInt(v); updateUI(); }
+    }
+
+    function undo() {
+        if(!lastLog) return alert("Không có gì để hoàn tác!");
+        if(confirm(`Hủy kết quả của ${lastLog.name}?`)) {
+            if(lastLog.gift.val > 0) drinkStats[lastLog.name] -= lastLog.gift.val;
+            fund -= lastLog.gift.fund;
+            nameBag.push(lastLog.name); giftBag.push(lastLog.gift); 
+            lastLog = null; updateUI();
+            document.getElementById('resText').innerText = "Đã hoàn tác!";
+            document.getElementById('resJoke').innerText = "";
+        }
     }
 
     function toggleMenu() { 
@@ -264,36 +309,12 @@
         m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function undo() {
-        if(!lastLog) return;
-        if(confirm(`Hủy kết quả: ${lastLog.name}?`)) {
-            if(lastLog.gift.val > 0) drinkStats[lastLog.name] -= lastLog.gift.val;
-            fund -= lastLog.gift.fund;
-            nameBag.push(lastLog.name); giftBag.push(lastLog.gift); // Trả lại túi
-            lastLog = null; updateUI();
-            document.getElementById('resText').innerText = "Đã hoàn tác!";
-        }
-    }
-
-    function editPlayers() {
-        let v = prompt("Nhập tên các anh em (phẩy):", names.join(","));
-        if(v) { names = v.split(",").map(x=>x.trim()).filter(x=>x); init(); }
-    }
-    function editFund() {
-        let v = prompt("Nhập số tiền quỹ hiện tại:", fund);
-        if(v) { fund = parseInt(v); updateUI(); }
-    }
-
-    function init() {
-        names.forEach(n => { if(!drinkStats[n]) drinkStats[n] = 0; });
-        fillBags();
+    window.onload = () => {
+        names.forEach(n => drinkStats[n] = 0);
+        initBag();
         draw('cvName', names);
         draw('cvGift', gifts);
         updateUI();
-    }
-
-    window.onload = () => {
-        init();
         document.getElementById('spinBtn').onclick = spin;
     };
 </script>
