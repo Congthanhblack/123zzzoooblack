@@ -2,390 +2,359 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-    <title>Tửu Vương V6 - Chuẩn Quỹ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tửu Vương V9 - Vòng Quay Nhân Phẩm</title>
     <style>
         :root {
-            --bg-color: #0d0d12;
-            --card-bg: #16161e;
+            --bg: #0a0a0c;
+            --panel: #161b22;
             --gold: #ffcc00;
-            --red: #ff4757;
-            --green: #2ed573;
-            --text-color: #eee;
+            --red: #ff4d4d;
+            --green: #00e676;
+            --text: #ffffff;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
-            overflow: hidden; /* Chặn cuộn tuyệt đối */
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            overflow: hidden;
         }
 
-        /* HEADER & QUỸ */
-        .top-bar {
+        /* HEADER */
+        .header {
+            flex: 0 0 auto;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid #333;
-            height: 40px;
+            background: #1f242d;
+            border-bottom: 2px solid var(--gold);
         }
-
-        h1 {
-            color: var(--gold);
-            font-size: 1rem;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
         .fund-box {
-            font-weight: bold;
             font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--green);
+            text-shadow: 0 0 5px rgba(0,230,118,0.3);
         }
-        .fund-value { color: var(--green); }
 
-        /* KHU VỰC CHÍNH - LAYOUT NGANG */
-        .main-stage {
+        /* STAGE - ĐẨY LÊN TRÊN */
+        .stage {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 0 10px;
-            position: relative;
+            align-items: flex-start;
+            padding-top: 15px;
+            gap: 12px;
         }
 
         .wheel-container {
             position: relative;
-            /* Dùng vmin để hình tròn luôn vừa khít màn hình bất kể xoay dọc hay ngang */
-            width: 45vmin; 
-            height: 45vmin;
-            max-width: 350px;
-            max-height: 350px;
+            width: 46vw;
+            max-width: 42vh;
+            aspect-ratio: 1/1;
         }
 
         canvas {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: transform 4.5s cubic-bezier(0.1, 0, 0.1, 1);
+            border: 3px solid #30363d;
+            transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
         }
 
         .pointer {
             position: absolute;
-            top: -10px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
-            height: 30px;
+            width: 26px;
+            height: 35px;
             background: #fff;
             clip-path: polygon(50% 100%, 0 0, 100% 0);
             z-index: 10;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        .wheel-title {
+        .wheel-label {
             position: absolute;
-            bottom: -25px;
+            bottom: -22px;
             width: 100%;
             text-align: center;
-            font-size: 0.8rem;
-            color: #888;
+            font-size: 0.75rem;
             font-weight: bold;
+            color: #8b949e;
+            text-transform: uppercase;
         }
 
-        /* BẢNG ĐIỀU KHIỂN DƯỚI */
-        .control-panel {
-            padding: 10px;
-            background: #111;
+        /* CONTROL PANEL */
+        .controls {
+            flex: 0 0 auto;
+            background: var(--panel);
+            padding: 15px;
+            border-radius: 20px 20px 0 0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            z-index: 20;
+            gap: 12px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        /* KHU VỰC DẪN CHUYỆN HÀI HƯỚC */
+        #intro-text {
+            text-align: center;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: #8b949e;
+            min-height: 1.2em;
         }
 
         #result-display {
             text-align: center;
-            font-size: 1.1rem;
-            min-height: 1.5em;
-            color: var(--gold);
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
-        }
-
-        .action-row {
+            min-height: 3.5rem;
             display: flex;
-            gap: 10px;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
+        
+        .res-name { font-size: 1.2rem; font-weight: 800; color: var(--gold); }
+        .res-gift { font-size: 1.1rem; font-weight: bold; color: var(--red); }
+        .res-joke { font-size: 0.8rem; color: #aaa; margin-top: 4px; }
 
-        button {
+        .btn-main {
+            background: linear-gradient(145deg, #ffca28, #ff8f00);
             border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #fff;
-            font-size: 0.9rem;
-        }
-
-        .btn-spin {
-            background: linear-gradient(135deg, #e67e22, #f1c40f);
+            padding: 14px;
+            border-radius: 12px;
             color: #000;
-            flex: 2;
+            font-weight: 900;
             font-size: 1.1rem;
             text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255,143,0,0.3);
         }
-        .btn-spin:active { transform: scale(0.98); }
-        .btn-spin:disabled { opacity: 0.5; filter: grayscale(1); }
+        .btn-main:active { transform: scale(0.96); }
+        .btn-main:disabled { filter: grayscale(1); opacity: 0.5; }
 
-        .btn-small { background: #333; flex: 1; border: 1px solid #444; }
+        .btn-row { display: flex; gap: 8px; }
+        .btn-sub {
+            flex: 1;
+            background: #30363d;
+            border: 1px solid #444;
+            color: #c9d1d9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
 
-        /* MODAL (Bảng điểm) */
+        /* MODAL */
         .modal {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 100; align-items: center; justify-content: center;
         }
         .modal-content {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid var(--gold);
+            background: #161b22; padding: 20px; border-radius: 15px;
+            width: 80%; border: 1px solid var(--gold);
         }
-        .close-btn { float: right; cursor: pointer; font-size: 1.5rem; color: #888; }
-
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <h1>🍺 V6 LOGIC</h1>
-        <div class="fund-box">QUỸ: <span id="fundAmount" class="fund-value">0</span> K</div>
+    <div class="header">
+        <h1>🍻 NHÂN PHẨM V9</h1>
+        <div class="fund-box">QUỸ: <span id="fundVal">200</span>K</div>
     </div>
 
-    <div class="main-stage">
+    <div class="stage">
         <div class="wheel-container">
             <div class="pointer"></div>
-            <canvas id="canvasName"></canvas>
-            <div class="wheel-title">NGƯỜI CHƠI</div>
+            <canvas id="cvName"></canvas>
+            <div class="wheel-label">Kẻ bị chọn</div>
         </div>
-
         <div class="wheel-container">
             <div class="pointer"></div>
-            <canvas id="canvasGift"></canvas>
-            <div class="wheel-title">THỬ THÁCH</div>
+            <canvas id="cvGift"></canvas>
+            <div class="wheel-label">Định mệnh</div>
         </div>
     </div>
 
-    <div class="control-panel">
-        <div id="result-display">Sẵn sàng...</div>
+    <div class="controls">
+        <div id="intro-text">"Đang kiểm tra nhân phẩm của bạn..."</div>
         
-        <div class="action-row">
-            <button class="btn-small" onclick="toggleStats()">📊 Bảng Điểm</button>
-            <button class="btn-spin" id="spinBtn">QUAY NGAY</button>
-            <button class="btn-small" onclick="undoLast()">⏪ Hoàn Tác</button>
+        <div id="result-display">
+            <div style="color:#666">Chạm để thách thức số phận!</div>
+        </div>
+
+        <button class="btn-main" id="spinBtn">🔥 KHAI HỎA 🔥</button>
+        
+        <div class="btn-row">
+            <button class="btn-sub" onclick="toggleMenu()">📊 Bảng điểm</button>
+            <button class="btn-sub" onclick="undo()">↩ Hoàn tác</button>
         </div>
     </div>
 
-    <div id="statsModal" class="modal">
+    <div id="menuModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="toggleStats()">&times;</span>
-            <h3 style="color:var(--gold); margin-top:0">🏆 BẢNG PHONG THẦN</h3>
-            <div id="rankList"></div>
-            <hr style="border-color:#333">
-            <button class="btn-small" style="width:100%" onclick="editFund()">💰 Sửa Quỹ</button>
-            <br><br>
-            <button class="btn-small" style="width:100%" onclick="editNames()">👥 Đổi Người Chơi</button>
+            <h3 style="color:var(--gold); text-align:center">BẢNG PHONG THẦN</h3>
+            <div id="ranking" style="max-height:200px; overflow-y:auto; margin-bottom:15px"></div>
+            <button class="btn-sub" style="width:100%; margin-bottom:8px" onclick="editPlayers()">Đổi tên</button>
+            <button class="btn-main" style="width:100%; font-size:0.9rem" onclick="toggleMenu()">ĐÓNG</button>
         </div>
     </div>
 
 <script>
-    // --- CẤU HÌNH ---
+    // --- DỮ LIỆU ---
     let names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "Sơn", "Thao"];
-    
-    // Logic quỹ: 
-    // fundChange > 0: Góp vào (Quỹ tăng)
-    // fundChange < 0: Lì xì (Quỹ giảm)
     const gifts = [
-        { label: "1 chén", color: "#e74c3c", val: 1, fundChange: 0 },
-        { label: "2 chén", color: "#c0392b", val: 2, fundChange: 0 },
-        { label: "1/2 ly", color: "#e67e22", val: 0.5, fundChange: 0 },
-        { label: "Uống hộ", color: "#1abc9c", val: 0, fundChange: 0 },
-        { label: "Góp 10k", color: "#f1c40f", val: 0, fundChange: 10 }, // Cộng vào quỹ
-        { label: "Góp 20k", color: "#f39c12", val: 0, fundChange: 20 }, // Cộng vào quỹ
-        { label: "Lì xì 20k", color: "#2ed573", val: 0, fundChange: -20 }, // Trừ quỹ
-        { label: "Qua lượt", color: "#3498db", val: 0, fundChange: 0 }
+        { label: "1 Chén", color: "#e74c3c", val: 1, fund: 0, weight: 8 },
+        { label: "2 Chén", color: "#c0392b", val: 2, fund: 0, weight: 4 },
+        { label: "50% Ly", color: "#e67e22", val: 0.5, fund: 0, weight: 6 },
+        { label: "Qua Lượt", color: "#3498db", val: 0, fund: 0, weight: 2 },
+        { label: "Chỉ Định", color: "#9b59b6", val: 0, fund: 0, weight: 3 },
+        { label: "Lì Xì 20k", color: "#2ed573", val: 0, fund: -20, weight: 1 },
+        { label: "Góp 20k", color: "#f1c40f", val: 0, fund: 20, weight: 2 }
     ];
 
-    let fund = 200; // Quỹ khởi điểm 200k
-    let drinkStats = {};
-    let lastAction = null;
-    let rotName = 0, rotGift = 0, isSpinning = false;
+    const introJokes = [
+        "Đừng nhìn tôi, hãy nhìn vào nhân phẩm của bạn!",
+        "Ai run tay thì xin mời ra ngoài...",
+        "Vòng quay không nói dối, chỉ có người uống là say!",
+        "Chuẩn bị tinh thần đi, tửu thần đang gọi tên!",
+        "Quay tay vận may sẽ đến (hoặc không).",
+        "Tự tin lên, cùng lắm là... xỉu tại chỗ!"
+    ];
 
-    // --- HÀM VẼ ---
-    function drawWheel(canvasId, items) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        const count = items.length;
-        const arc = (2 * Math.PI) / count;
-        // Độ phân giải cao
-        canvas.width = 600; canvas.height = 600; 
-        
-        items.forEach((item, i) => {
-            const angle = i * arc;
-            ctx.beginPath();
-            ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#1e1e2e' : '#282838') : item.color;
-            ctx.moveTo(300, 300);
-            ctx.arc(300, 300, 295, angle, angle + arc);
-            ctx.fill();
-            ctx.strokeStyle = "rgba(0,0,0,0.2)";
-            ctx.lineWidth = 2;
-            ctx.stroke();
+    const drinkJokes = [
+        "Rượu bất khả ép, nhưng ép thì phải uống!",
+        "Thêm một chén, đời thêm vui (hoặc thêm phê).",
+        "Đừng trách vòng quay, hãy trách bạn quá đen!",
+        "Uống đi cho quên hết sự đời...",
+        "Bản lĩnh nằm ở đáy ly, cố lên anh em!",
+        "Rượu này thơm quá, không uống hơi phí!",
+        "Một chén này, cả bàn ghi công!"
+    ];
 
-            ctx.save();
-            ctx.translate(300, 300);
-            ctx.rotate(angle + arc / 2);
-            ctx.textAlign = "right";
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 32px Arial";
-            ctx.shadowColor = "rgba(0,0,0,0.8)";
-            ctx.shadowBlur = 4;
+    const moneyJokes = [
+        "Tiền là phù du, nhưng nộp quỹ là nghĩa vụ!",
+        "Túi tiền khóc, nhưng quỹ cười.",
+        "Cảm ơn vì sự đóng góp vĩ đại của bạn!",
+        "Ví mỏng đi một chút, nhưng tình anh em dày thêm."
+    ];
+
+    let fund = 200, drinkStats = {}, nameBag = [], giftBag = [], rotN = 0, rotG = 0;
+
+    // --- LOGIC ---
+    function init() {
+        names.forEach(n => drinkStats[n] = 0);
+        fillBags();
+        draw('cvName', names);
+        draw('cvGift', gifts);
+        updateUI();
+        // Hiệu ứng đổi text hài hước liên tục
+        setInterval(() => {
+            if(!document.getElementById('spinBtn').disabled) {
+                document.getElementById('intro-text').innerText = introJokes[Math.floor(Math.random()*introJokes.length)];
+            }
+        }, 3000);
+    }
+
+    function fillBags() {
+        nameBag = []; names.forEach(n => { nameBag.push(n); nameBag.push(n); });
+        giftBag = []; gifts.forEach(g => { for(let i=0; i<g.weight; i++) giftBag.push(g); });
+        nameBag.sort(() => Math.random() - 0.5);
+        giftBag.sort(() => Math.random() - 0.5);
+    }
+
+    function spin() {
+        const btn = document.getElementById('spinBtn');
+        btn.disabled = true;
+        document.getElementById('intro-text').innerText = "🌀 Số phận đang được quyết định...";
+        document.getElementById('result-display').innerHTML = "";
+
+        if(!nameBag.length || !giftBag.length) fillBags();
+        const pName = nameBag.pop();
+        const pGift = giftBag.pop();
+
+        const nIdx = names.indexOf(pName);
+        const gIdx = gifts.findIndex(g => g.label === pGift.label);
+        const nSlice = 360/names.length, gSlice = 360/gifts.length;
+        const rand = 360 * 6;
+
+        rotN = (rotN - (rotN%360)) + rand + (270 - (nIdx*nSlice) - nSlice/2);
+        rotG = (rotG - (rotG%360)) + rand + (270 - (gIdx*gSlice) - gSlice/2);
+
+        document.getElementById('cvName').style.transform = `rotate(${rotN}deg)`;
+        document.getElementById('cvGift').style.transform = `rotate(${rotG}deg)`;
+
+        setTimeout(() => {
+            if(pGift.val > 0) drinkStats[pName] += pGift.val;
+            fund += pGift.fund;
+            if(fund < 0) fund = 0;
+
+            let joke = "";
+            if(pGift.val > 0) joke = drinkJokes[Math.floor(Math.random()*drinkJokes.length)];
+            else if(pGift.fund !== 0) joke = moneyJokes[Math.floor(Math.random()*moneyJokes.length)];
+            else joke = "Thoát nạn ngoạn mục!";
+
+            document.getElementById('result-display').innerHTML = `
+                <div class="res-name">${pName}</div>
+                <div class="res-gift">${pGift.label} ${pGift.fund < 0 ? '🧧' : '🍺'}</div>
+                <div class="res-joke">"${joke}"</div>
+            `;
             
-            let text = typeof item === 'string' ? item : item.label;
-            // Rút gọn text nếu quá dài
-            if(text.includes("Lì xì")) text = "Lì xì";
-            if(text.includes("Góp")) text = text.replace("Góp", "+");
-            
-            ctx.fillText(text, 260, 10);
-            ctx.restore();
+            updateUI();
+            btn.disabled = false;
+        }, 4100);
+    }
+
+    // --- UI ---
+    function draw(id, items) {
+        const cv = document.getElementById(id);
+        const ctx = cv.getContext('2d');
+        const arc = 2 * Math.PI / items.length;
+        cv.width = 600; cv.height = 600;
+        items.forEach((it, i) => {
+            const ang = i * arc;
+            ctx.beginPath(); ctx.moveTo(300, 300); ctx.arc(300, 300, 295, ang, ang+arc);
+            ctx.fillStyle = (typeof it === 'string') ? (i%2?'#1f242d':'#2a303c') : it.color;
+            ctx.fill(); ctx.stroke();
+            ctx.save(); ctx.translate(300, 300); ctx.rotate(ang + arc/2);
+            ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 32px Arial";
+            let txt = (typeof it === 'string') ? it : it.label;
+            ctx.fillText(txt, 270, 10); ctx.restore();
         });
     }
 
-    // --- LOGIC QUAY ---
-    function spin() {
-        if(isSpinning) return;
-        isSpinning = true;
-        document.getElementById('spinBtn').disabled = true;
-        document.getElementById('result-display').innerHTML = "🎲 Đang quay...";
-        document.getElementById('result-display').style.color = "#888";
-
-        // Random góc quay (thêm ít nhất 5 vòng)
-        rotName += Math.floor(Math.random() * 360) + 1800; 
-        rotGift += Math.floor(Math.random() * 360) + 1800;
-
-        document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
-        document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
-
-        // Đợi 4.5s
-        setTimeout(showResult, 4600);
-    }
-
-    function showResult() {
-        // Tính toán vị trí mũi tên (góc 270 độ là vị trí kim chỉ)
-        const nIdx = Math.floor(((360 - (rotName % 360) + 270) % 360) / (360 / names.length));
-        const gIdx = Math.floor(((360 - (rotGift % 360) + 270) % 360) / (360 / gifts.length));
-        
-        const pName = names[nIdx];
-        const pGift = gifts[gIdx];
-
-        // Cập nhật dữ liệu
-        if(!drinkStats[pName]) drinkStats[pName] = 0;
-        drinkStats[pName] += pGift.val;
-        
-        fund += pGift.fundChange; // Cộng hoặc Trừ quỹ theo logic mới
-        if(fund < 0) fund = 0; // Không để quỹ âm
-
-        // Lưu lịch sử để hoàn tác
-        lastAction = { 
-            name: pName, 
-            drink: pGift.val, 
-            fundChange: pGift.fundChange,
-            label: pGift.label
-        };
-
-        // Hiển thị kết quả
-        let actionText = pGift.label;
-        let color = pGift.color;
-        
-        // Thêm icon cho sinh động
-        if(pGift.fundChange > 0) actionText += " 💸 (Quỹ tăng)";
-        if(pGift.fundChange < 0) actionText += " 🧧 (Quỹ giảm)";
-
-        document.getElementById('result-display').innerHTML = `${pName} ➔ <span style="color:${color}">${actionText}</span>`;
-        
-        updateUI();
-        isSpinning = false;
-        document.getElementById('spinBtn').disabled = false;
-    }
-
-    // --- CÁC HÀM PHỤ TRỢ ---
     function updateUI() {
-        document.getElementById('fundAmount').innerText = fund;
-        
-        // Render bảng xếp hạng
-        const sorted = Object.entries(drinkStats).sort((a,b) => b[1] - a[1]);
-        const html = sorted.map((item, i) => 
-            `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333">
-                <span>${i+1}. ${item[0]}</span>
-                <span style="color:var(--gold)">${item[1]} chén</span>
-            </div>`
-        ).join('');
-        document.getElementById('rankList').innerHTML = html || "<p>Chưa ai uống...</p>";
+        document.getElementById('fundVal').innerText = fund;
+        let html = "";
+        Object.entries(drinkStats).sort((a,b)=>b[1]-a[1]).forEach(([n,v],i) => {
+            html += `<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #333">
+                <span>${i+1}. ${n}</span> <span style="color:var(--gold)">${v} chén</span>
+            </div>`;
+        });
+        document.getElementById('ranking').innerHTML = html;
     }
 
-    function undoLast() {
-        if(!lastAction) return alert("Không có gì để hoàn tác!");
-        if(confirm(`Hủy kết quả: ${lastAction.name} - ${lastAction.label}?`)) {
-            drinkStats[lastAction.name] -= lastAction.drink;
-            fund -= lastAction.fundChange; // Đảo ngược logic tiền (nếu cộng thì giờ trừ, nếu trừ thì giờ cộng)
-            lastAction = null;
-            document.getElementById('result-display').innerText = "Đã hoàn tác!";
-            updateUI();
+    function toggleMenu() {
+        const m = document.getElementById('menuModal');
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function editPlayers() {
+        let val = prompt("Nhập tên, phẩy:", names.join(","));
+        if(val) {
+            names = val.split(",").map(x=>x.trim()).filter(x=>x);
+            init();
         }
     }
 
-    function editFund() {
-        let val = prompt("Nhập số tiền quỹ hiện tại (k):", fund);
-        if(val && !isNaN(val)) { fund = parseInt(val); updateUI(); }
-    }
-
-    function editNames() {
-        let val = prompt("Nhập tên, cách nhau dấu phẩy:", names.join(","));
-        if(val) { 
-            names = val.split(",").filter(x=>x).map(x=>x.trim()); 
-            drawWheel('canvasName', names);
-            drinkStats = {}; // Reset điểm khi đổi người
-            names.forEach(n => drinkStats[n] = 0);
-            updateUI();
-        }
-    }
-
-    function toggleStats() {
-        const m = document.getElementById('statsModal');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    // --- KHỞI CHẠY ---
     window.onload = () => {
-        names.forEach(n => drinkStats[n] = 0);
-        drawWheel('canvasName', names);
-        drawWheel('canvasGift', gifts);
-        updateUI();
+        init();
         document.getElementById('spinBtn').onclick = spin;
     };
 </script>
