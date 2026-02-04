@@ -3,90 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đệ Nhất Tửu Vương - v4 Reset Edition</title>
+    <title>Đệ Nhất Tửu Vương - Ultra Compact</title>
     <style>
         :root { --bg: #0b0b0b; --card: #161616; --gold: #FFD700; --text: #fff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body {
             background: var(--bg); color: var(--text);
-            font-family: -apple-system, sans-serif; margin: 0; padding: 5px;
+            font-family: -apple-system, sans-serif;
             display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            padding: 5px;
         }
 
-        h1 { color: var(--gold); text-align: center; font-size: 1.1rem; margin: 5px 0; text-transform: uppercase; letter-spacing: 1px; }
+        /* HEADER SIÊU GỌN */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 10px; flex-shrink: 0;
+        }
+        h1 { color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .fund-top { color: #2ecc71; font-weight: bold; font-size: 0.85rem; }
 
-        .main-stage { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+        /* VÙNG CHÍNH - KHÔNG CUỘN */
+        .main-stage {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; flex: 0 0 75vh; /* Chiếm tối đa 75% chiều cao màn hình */
+        }
 
         .wheels-container {
-            display: flex; justify-content: center; gap: 8px; padding: 10px 0 20px 0;
+            display: flex; justify-content: center; gap: 10px; 
+            width: 100%; padding: 15px 0;
         }
 
         .wheel-wrapper {
             position: relative;
-            width: 45vw; max-width: 170px;
+            width: 42vw; max-width: 160px; /* Thu nhỏ hơn nữa */
             aspect-ratio: 1/1;
         }
 
         canvas {
             width: 100% !important; height: 100% !important; border-radius: 50%;
-            border: 2px solid #444; box-shadow: 0 0 15px rgba(0,0,0,0.8);
+            border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.8);
             transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
         }
 
         .pointer {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            width: 18px; height: 24px; background: #fff;
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 16px; height: 22px; background: #fff;
             clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
         }
 
         .wheel-label {
-            position: absolute; bottom: -18px; width: 100%;
-            text-align: center; color: var(--gold); font-size: 0.6rem; font-weight: bold;
+            position: absolute; bottom: -16px; width: 100%;
+            text-align: center; color: var(--gold); font-size: 0.55rem; font-weight: bold;
         }
 
+        /* KẾT QUẢ & ĐIỀU KHIỂN */
         #result-box {
-            background: var(--card); border: 1.5px solid #333;
-            border-radius: 8px; padding: 8px; margin: 10px 0;
-            width: 95%; max-width: 400px; min-height: 65px;
+            background: var(--card); border: 1px solid #333; border-radius: 8px;
+            width: 95%; max-width: 380px; min-height: 60px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            text-align: center; margin: 10px 0; padding: 5px;
         }
         
-        .res-highlight { color: #5dade2; font-weight: bold; font-size: 1rem; text-transform: uppercase; }
-        .res-action { font-size: 1rem; color: #ec7063; font-weight: bold; margin-top: 2px; }
-        .res-funny { font-size: 0.75rem; color: #888; font-style: italic; }
-        .farewell-msg { color: #ff69b4; font-size: 0.8rem; font-weight: bold; line-height: 1.2; }
+        .res-highlight { color: #5dade2; font-weight: bold; font-size: 0.95rem; text-transform: uppercase; }
+        .res-action { font-size: 0.95rem; color: #ec7063; font-weight: bold; }
+        .res-funny { font-size: 0.7rem; color: #888; font-style: italic; }
+        .farewell-msg { color: #ff69b4; font-size: 0.75rem; font-weight: bold; }
 
-        .controls { width: 100%; text-align: center; }
         #spinBtn {
             background: linear-gradient(135deg, #FFD700, #ff8c00);
-            border: none; border-radius: 25px; padding: 12px 0;
-            font-weight: 900; font-size: 1rem; cursor: pointer; width: 85%; max-width: 280px;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            border: none; border-radius: 20px; padding: 10px 0;
+            font-weight: 900; font-size: 0.9rem; cursor: pointer; width: 80%; max-width: 250px;
+            box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
         }
 
-        .btn-group { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+        .btn-group { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
         .btn-group button { 
-            background: #222; color: #bbb; border: 1px solid #333; padding: 6px 12px; 
-            border-radius: 15px; font-size: 0.7rem; font-weight: bold;
+            background: #222; color: #bbb; border: 1px solid #333; padding: 5px 10px; 
+            border-radius: 12px; font-size: 0.65rem;
         }
-        .btn-group .danger { border-color: #500; color: #e74c3c; }
 
+        /* PHẦN DƯỚI - CUỘN ĐƯỢC */
         .scroll-area {
-            flex: 1; overflow-y: auto; margin-top: 12px;
-            padding: 5px; border-top: 1px solid #222;
+            flex: 1; overflow-y: auto; margin-top: 10px;
+            border-top: 1px solid #222; padding: 5px;
         }
 
-        .info-card { background: #111; border-radius: 6px; padding: 8px; margin-bottom: 8px; border: 1px solid #1a1a1a; }
-        h3 { font-size: 0.7rem; color: #555; margin: 0 0 5px 0; text-transform: uppercase; display: flex; justify-content: space-between; }
-        .rank-item { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0; border-bottom: 1px dashed #222; }
-        #history-list { font-size: 0.75rem; color: #666; line-height: 1.4; }
+        .info-card { background: #111; border-radius: 6px; padding: 8px; margin-bottom: 5px; border: 1px solid #1a1a1a; }
+        h3 { font-size: 0.65rem; color: #555; margin-bottom: 3px; text-transform: uppercase; }
+        .rank-item { display: flex; justify-content: space-between; font-size: 0.75rem; padding: 3px 0; border-bottom: 1px dashed #222; }
+        #history-list { font-size: 0.7rem; color: #666; }
     </style>
 </head>
 <body>
 
-    <h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
+    <div class="header">
+        <h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
+        <div class="fund-top">Quỹ: <span id="fundAmount">200</span>k</div>
+    </div>
 
     <div class="main-stage">
         <div class="wheels-container">
@@ -103,22 +117,22 @@
         </div>
 
         <div id="result-box">
-            <div class="res-funny">Nhấn nút QUAY để bắt đầu định đoạt!</div>
+            <div class="res-funny">Nhấn QUAY để bắt đầu định đoạt!</div>
         </div>
 
         <div class="controls">
             <button id="spinBtn">QUAY NGAY 🔥</button>
             <div class="btn-group">
                 <button onclick="undoLast()">⏪ Hoàn tác</button>
-                <button onclick="editFund()">💰 Quỹ</button>
-                <button class="danger" onclick="resetGame()">🧹 Reset</button>
+                <button onclick="editFund()">💰 Sửa quỹ</button>
+                <button style="color:#e74c3c" onclick="resetGame()">🧹 Reset</button>
             </div>
         </div>
     </div>
 
     <div class="scroll-area">
         <div class="info-card">
-            <h3><span>🏆 BẢNG PHONG THẦN</span> <span style="color:#2ecc71">Quỹ: <span id="fundAmount">200</span>k</span></h3>
+            <h3>🏆 BẢNG PHONG THẦN</h3>
             <div id="rankList"></div>
         </div>
         <div class="info-card">
@@ -130,96 +144,56 @@
 <script>
     const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
     const males = ["NCT", "A Quả", "A Thi", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
-
     const gifts = [
-        { label: "Uống 1 chén", color: "#e74c3c", val: 1, wM: 35, wF: 10, fun: "Cạn ly vì tình anh em! 🍺" },
-        { label: "Uống 2 chén", color: "#c0392b", val: 2, wM: 15, wF: 5,  fun: "Tửu lượng vô song! 😈" },
-        { label: "Uống 1/2", color: "#e67e22", val: 0.5, wM: 5, wF: 30, fun: "Nhấp môi làm duyên thôi. 😉" },
-        { label: "Uống hộ", color: "#1abc9c", val: 0, wM: 10, wF: 10, fun: "Muốn hại ai thì nói đi! 👉" },
-        { label: "Full ly ☠️", color: "#8e44ad", val: 2, wM: 10, wF: 2,  fun: "Trăm phần trăm không chừa! 🤮" },
-        { label: "Chỉ định", color: "#9b59b6", val: 0, wM: 8, wF: 8,  fun: "Quyền sinh sát trong tay! 🗡️" },
-        { label: "Góp 10k", color: "#f39c12", money: -10, val: 0, wM: 5, wF: 5, fun: "Ting ting! Vào quỹ 10k. 💸" },
-        { label: "Góp 20k", color: "#f1c40f", money: -20, val: 0, wM: 5, wF: 5, fun: "Đại gia đây rồi! Góp 20k. 👏" },
-        { label: "Qua lượt", color: "#3498db", val: 0, wM: 5, wF: 15, fun: "Thần men đã độ bạn! 🙏" },
-        { label: "1 Phiếu Đổi", color: "#2ecc71", val: 0, wM: 5, wF: 10, fun: "Kim bài miễn tử! 🛡️" }
+        { label: "Uống 1 chén", color: "#e74c3c", val: 1, wM: 35, wF: 10, fun: "Cạn ly vì tình huynh đệ! 🍺" },
+        { label: "Uống 2 chén", color: "#c0392b", val: 2, wM: 15, wF: 5,  fun: "Hảo tửu lượng! 😈" },
+        { label: "Uống 1/2", color: "#e67e22", val: 0.5, wM: 5, wF: 30, fun: "Nhấp môi lấy lệ. 😉" },
+        { label: "Uống hộ", color: "#1abc9c", val: 0, wM: 10, wF: 10, fun: "Huynh muốn hại ai? 👉" },
+        { label: "Full ly ☠️", color: "#8e44ad", val: 2, wM: 10, wF: 2,  fun: "Dứt điểm 100%! 🤮" },
+        { label: "Chỉ định", color: "#9b59b6", val: 0, wM: 8, wF: 8,  fun: "Quyền sinh sát! 🗡️" },
+        { label: "Góp 10k", color: "#f39c12", money: -10, val: 0, wM: 5, wF: 5, fun: "Ting ting vào quỹ! 💸" },
+        { label: "Góp 20k", color: "#f1c40f", money: -20, val: 0, wM: 5, wF: 5, fun: "Đại gia xuất hiện! 👏" },
+        { label: "Qua lượt", color: "#3498db", val: 0, wM: 5, wF: 15, fun: "May mắn thoát nạn 🙏" },
+        { label: "1 Phiếu Đổi", color: "#2ecc71", val: 0, wM: 5, wF: 10, fun: "Kim bài miễn tử 🛡️" }
     ];
 
-    let fund = 200, drinkStats = {}, historyLog = [], lastAction = null, isSpinning = false;
-    let secretCount = 0, forceHoa = false, hasHoaDone = false;
-    let rotName = 0, rotGift = 0;
-
+    let fund = 200, drinkStats = {}, historyLog = [], lastAction = null, isSpinning = false, secretCount = 0, forceHoa = false, hasHoaDone = false, rotName = 0, rotGift = 0;
     names.forEach(n => drinkStats[n] = 0);
 
     function drawWheel(id, items) {
-        const cvs = document.getElementById(id), ctx = cvs.getContext('2d');
-        const count = items.length, arc = (Math.PI*2)/count, size = 500;
-        cvs.width = size; cvs.height = size;
+        const cvs = document.getElementById(id), ctx = cvs.getContext('2d'), count = items.length, arc = (Math.PI*2)/count;
+        cvs.width = 400; cvs.height = 400;
         items.forEach((item, i) => {
-            const angle = i * arc;
-            ctx.beginPath(); ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#1c2833' : '#273746') : item.color;
-            ctx.moveTo(250, 250); ctx.arc(250, 250, 245, angle, angle + arc); ctx.fill();
-            ctx.save(); ctx.translate(250, 250); ctx.rotate(angle + arc/2);
-            ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 24px Arial";
-            ctx.fillText(typeof item === 'string' ? item : item.label, 230, 10); ctx.restore();
+            const angle = i * arc; ctx.beginPath(); ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#1c2833' : '#273746') : item.color;
+            ctx.moveTo(200, 200); ctx.arc(200, 200, 195, angle, angle + arc); ctx.fill();
+            ctx.save(); ctx.translate(200, 200); ctx.rotate(angle + arc/2); ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 20px Arial"; ctx.fillText(typeof item === 'string' ? item : item.label, 185, 8); ctx.restore();
         });
     }
 
-    function getWeightedGift(isMale) {
-        let total = 0;
-        gifts.forEach(g => total += isMale ? g.wM : g.wF);
-        let r = Math.random() * total;
-        for (let g of gifts) {
-            let w = isMale ? g.wM : g.wF;
-            if (r < w) return g;
-            r -= w;
-        }
-        return gifts[0];
-    }
-
     function spin() {
-        if(isSpinning) return;
-        isSpinning = true; document.getElementById('spinBtn').disabled = true;
-        secretCount = 0; 
-        document.getElementById('result-box').innerHTML = "🌀 Đang triệu hồi nạn nhân...";
-
-        let isFarewell = false;
-        let nIdx;
-
-        if (forceHoa && !hasHoaDone) {
-            nIdx = names.indexOf("E Hòa");
-            isFarewell = true; forceHoa = false; hasHoaDone = true;
-        } else {
-            nIdx = Math.floor(Math.random()*names.length);
-        }
-
-        const pName = names[nIdx];
-        const gift = getWeightedGift(males.includes(pName));
+        if(isSpinning) return; isSpinning = true; document.getElementById('spinBtn').disabled = true; secretCount = 0;
+        document.getElementById('result-box').innerHTML = "🌀 Đang chọn nạn nhân...";
+        let nIdx = (forceHoa && !hasHoaDone) ? names.indexOf("E Hòa") : Math.floor(Math.random()*names.length);
+        const pName = names[nIdx], isM = males.includes(pName);
+        
+        let totalW = 0; gifts.forEach(g => totalW += isM ? g.wM : g.wF);
+        let r = Math.random() * totalW, gift = gifts[0];
+        for (let g of gifts) { let w = isM ? g.wM : g.wF; if (r < w) { gift = g; break; } r -= w; }
         const gIdx = gifts.indexOf(gift);
 
         rotName += (360*5) + (270 - (nIdx*(360/names.length) + (360/names.length)/2) - (rotName%360) + 360)%360;
         rotGift += (360*7) + (270 - (gIdx*(360/gifts.length) + (360/gifts.length)/2) - (rotGift%360) + 360)%360;
-
         document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
         document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
 
         setTimeout(() => {
-            if (isFarewell) {
-                document.getElementById('result-box').innerHTML = `
-                    <div class="res-highlight" style="color:#ff69b4">${pName} ❤️</div>
-                    <div class="farewell-msg">Chúc em luôn xinh đẹp và rực rỡ trên chặng đường mới nhé! ✨</div>
-                    <div style="font-size:0.7rem; color:#2ecc71; margin-top:3px">Đặc quyền: Em chọn 1 người làm 1 việc giúp em!</div>
-                `;
-                historyLog.unshift(`${pName}: Lời chúc chia tay ❤️`);
-                lastAction = { type: 'FAREWELL' };
+            if (forceHoa && nIdx === names.indexOf("E Hòa")) {
+                document.getElementById('result-box').innerHTML = `<div class="res-highlight" style="color:#ff69b4">${pName} ❤️</div><div class="farewell-msg">Chúc em luôn xinh đẹp và rạng rỡ! ✨</div>`;
+                hasHoaDone = true; forceHoa = false; lastAction = { type: 'FAREWELL' };
             } else {
                 drinkStats[pName] += gift.val; fund += (gift.money || 0);
-                document.getElementById('result-box').innerHTML = `
-                    <div class="res-highlight">${pName}</div>
-                    <div class="res-action">${gift.label}</div>
-                    <div class="res-funny">${gift.fun}</div>
-                `;
-                historyLog.unshift(`${pName}: ${gift.label}`);
-                lastAction = { name: pName, drink: gift.val, money: (gift.money || 0) };
+                document.getElementById('result-box').innerHTML = `<div class="res-highlight">${pName}</div><div class="res-action">${gift.label}</div><div class="res-funny">${gift.fun}</div>`;
+                historyLog.unshift(`${pName}: ${gift.label}`); lastAction = { name: pName, drink: gift.val, money: (gift.money || 0) };
             }
             updateUI(); isSpinning = false; document.getElementById('spinBtn').disabled = false;
         }, 5100);
@@ -233,38 +207,20 @@
     }
 
     function resetGame() {
-        if(!confirm("Dọn bàn làm lại từ đầu?")) { secretCount = 0; return; }
+        if(!confirm("Reset?")) { secretCount = 0; return; }
         secretCount++;
-        // CẬP NHẬT: THAY ĐỔI TỪ 3 LẦN THÀNH 4 LẦN RESET
         if(secretCount === 4 && !hasHoaDone) {
             forceHoa = true; secretCount = 0;
-            document.getElementById('result-box').innerHTML = "<div style='color:var(--gold); font-weight:bold'>Gió đã đổi chiều... 🌬️</div><div class='res-funny'>Vận mệnh lượt tới đã được an bài!</div>";
+            document.getElementById('result-box').innerHTML = "<div style='color:var(--gold);font-weight:bold'>Gió đã đổi chiều... 🌬️</div>";
         } else {
-            document.getElementById('result-box').innerHTML = "<div>Đại hội đã làm mới!</div>";
             fund = 200; historyLog = []; names.forEach(n => drinkStats[n]=0); updateUI();
+            document.getElementById('result-box').innerHTML = "<div>Đã làm mới!</div>";
         }
     }
 
-    function undoLast() { 
-        if(!lastAction || !confirm("Hoàn tác lượt vừa rồi?")) return;
-        if(lastAction.type !== 'FAREWELL') {
-            drinkStats[lastAction.name] -= lastAction.drink;
-            fund -= lastAction.money;
-        } else { hasHoaDone = false; }
-        historyLog.shift(); lastAction = null; updateUI();
-    }
-
-    function editFund() { 
-        let n = prompt("Nhập số quỹ mới (K):", fund); 
-        if(n !== null && !isNaN(n)) { fund = parseInt(n); updateUI(); }
-    }
-
-    window.onload = () => { 
-        drawWheel('canvasName', names); 
-        drawWheel('canvasGift', gifts); 
-        updateUI(); 
-        document.getElementById('spinBtn').onclick = spin; 
-    };
+    function undoLast() { if(lastAction && confirm("Undo?")) { if(lastAction.type!=='FAREWELL'){ drinkStats[lastAction.name]-=lastAction.drink; fund-=lastAction.money; } else hasHoaDone=false; historyLog.shift(); lastAction=null; updateUI(); } }
+    function editFund() { let n = prompt("Số tiền:", fund); if(n!==null) { fund=parseInt(n); updateUI(); } }
+    window.onload = () => { drawWheel('canvasName', names); drawWheel('canvasGift', gifts); updateUI(); document.getElementById('spinBtn').onclick = spin; };
 </script>
 </body>
 </html>
