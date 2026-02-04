@@ -1,118 +1,191 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Đệ Nhất Tửu Vương - Full Nâng Cấp</title>
-<style>
-body{background:#0d0d0d;color:#fff;font-family:'Segoe UI';margin:0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
-h1{color:#ffde00;font-size:1.5rem;text-transform:uppercase;margin:20px 0;text-shadow:0 0 10px rgba(255,222,0,.5)}
-.container{display:flex;flex-direction:column;align-items:center;gap:25px;width:100%}
-.wheel-box{position:relative;width:320px;height:320px}
-canvas{width:100%;height:100%;border-radius:50%;border:5px solid #fff;box-shadow:0 0 20px rgba(255,255,255,.1);transition:transform 5s cubic-bezier(.1,0,.1,1);background:#222;will-change:transform}
-.pointer{position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:30px;height:35px;background:white;clip-path:polygon(50% 100%,0 0,100% 0);z-index:10}
-.label{margin-top:10px;color:#ffde00;font-weight:bold;font-size:.9rem;text-transform:uppercase}
-#result-display{margin-top:20px;background:#1a1a1a;border:1px solid #333;width:90%;max-width:500px;padding:15px;border-radius:12px;text-align:center;min-height:80px}
-.res-name{color:#3498db;font-size:1.5rem;font-weight:bold}
-.res-gift{color:#e74c3c;font-size:1.8rem;font-weight:bold;margin-top:5px}
-#spinBtn{margin:20px 0;background:linear-gradient(180deg,#ffde00,#e6c200);color:#000;border:none;padding:15px 50px;font-size:1.2rem;font-weight:bold;border-radius:50px;cursor:pointer;box-shadow:0 5px 15px rgba(255,222,0,.3)}
-#spinBtn:disabled{background:#444;color:#888;box-shadow:none}
-#spinBtn:active{transform:scale(.96)}
-#history{margin-top:10px;font-size:.85rem;color:#aaa;max-width:500px}
-@media(min-width:768px){.container{flex-direction:row;justify-content:center}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Đệ Nhất Tửu Vương - Pro Max</title>
+    <style>
+        :root { --gold: #ffde00; --red: #e74c3c; --blue: #3498db; }
+        body { background: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        h1 { color: var(--gold); font-size: 1.4rem; text-transform: uppercase; margin: 15px 0; text-shadow: 0 0 10px rgba(255,222,0,.5); text-align: center; }
+        
+        .info-bar { display: flex; gap: 20px; margin-bottom: 10px; font-weight: bold; font-size: 0.9rem; color: #ccc; }
+        #fund-display { color: var(--gold); }
+
+        .container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+        .wheel-box { position: relative; width: 300px; height: 300px; }
+        canvas { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #fff; transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); background: #222; }
+        
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 30px; height: 35px; background: #fff; clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        .label { margin-top: 8px; color: var(--gold); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
+
+        #result-display { margin-top: 20px; background: #1a1a1a; border: 1px solid #333; width: 85%; max-width: 450px; padding: 15px; border-radius: 12px; text-align: center; min-height: 70px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .res-name { color: var(--blue); font-size: 1.4rem; font-weight: bold; }
+        .res-gift { color: var(--red); font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
+
+        .controls { display: flex; gap: 10px; margin: 20px 0; }
+        #spinBtn { background: linear-gradient(180deg, var(--gold), #e6c200); color: #000; border: none; padding: 12px 40px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 222, 0, 0.3); }
+        #spinBtn:disabled { background: #444; color: #888; box-shadow: none; }
+        
+        #history { width: 85%; max-width: 450px; margin-top: 10px; font-size: 0.8rem; color: #888; border-top: 1px solid #333; padding-top: 10px; height: 100px; overflow-y: auto; }
+        @media(min-width: 768px){ .container { flex-direction: row; justify-content: center; } }
+    </style>
 </head>
 <body>
 
 <h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
 
-<div class="container">
-  <div class="wheel-box">
-    <div class="pointer"></div>
-    <canvas id="canvasName"></canvas>
-    <div class="label">Nạn nhân tiếp theo?</div>
-  </div>
-  <div class="wheel-box">
-    <div class="pointer"></div>
-    <canvas id="canvasGift"></canvas>
-    <div class="label">Số phận định đoạt?</div>
-  </div>
+<div class="info-bar">
+    <span>Quỹ còn lại: <span id="fund-display">200,000</span>đ</span>
 </div>
 
-<div id="result-display"><div id="status-text">Đã sẵn sàng! Nhấn QUAY để chơi.</div></div>
-<div id="history"></div>
+<div class="container">
+    <div class="wheel-box">
+        <div class="pointer"></div>
+        <canvas id="canvasName"></canvas>
+        <div class="label">Nạn nhân</div>
+    </div>
+    <div class="wheel-box">
+        <div class="pointer"></div>
+        <canvas id="canvasGift"></canvas>
+        <div class="label">Số phận</div>
+    </div>
+</div>
 
-<button id="spinBtn">QUAY NGAY</button>
-<button onclick="editData()">CHỈNH DỮ LIỆU</button>
+<div id="result-display"><div id="status-text">Sẵn sàng! Nhấn QUAY để bắt đầu.</div></div>
 
-<audio id="spinSound" src="spin.mp3"></audio>
-<audio id="winSound" src="win.mp3"></audio>
+<div class="controls">
+    <button id="spinBtn">QUAY NGAY</button>
+</div>
+
+<div id="history"><b>Lịch sử:</b></div>
 
 <script>
-const names=["NCT","A Quả","C. Lan","A Thi","E Chinh","E Hòa","E An","E Chương","Sơn","Thao","KM 1","KM 2"];
-const gifts=[
-{label:"Lì xì 20k",color:"#f1c40f",weight:1},
-{label:"Uống 1 chén",color:"#e74c3c",weight:3},
-{label:"Qua lượt",color:"#3498db",weight:4},
-{label:"Lì xì 10k",color:"#f39c12",weight:2},
-{label:"Chỉ định",color:"#8e44ad",weight:2},
-{label:"Uống 2 chén",color:"#c0392b",weight:1},
-{label:"Uống 1/2",color:"#e67e22",weight:1},
-{label:"Uống hộ",color:"#1abc9c",weight:3}
+// Cấu hình dữ liệu
+const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
+let gifts = [
+    { label: "Lì xì 20k", color: "#f1c40f", value: 20000, prob: 5 },
+    { label: "Uống 1 chén", color: "#e74c3c", value: 0, prob: 20 },
+    { label: "Qua lượt", color: "#3498db", value: 0, prob: 15 },
+    { label: "Lì xì 10k", color: "#f39c12", value: 10000, prob: 10 },
+    { label: "Chỉ định", color: "#8e44ad", value: 0, prob: 10 },
+    { label: "Uống 2 chén", color: "#c0392b", value: 0, prob: 10 },
+    { label: "Uống 1/2", color: "#e67e22", value: 0, prob: 15 },
+    { label: "Uống chéo", color: "#16a085", value: 0, prob: 10 }, // Mới
+    { label: "Cả bàn uống", color: "#95a5a6", value: 0, prob: 5 }   // Mới
 ];
 
-let rotName=0,rotGift=0,isSpinning=false,lastNameIndex=null;
-const btn=document.getElementById("spinBtn"),display=document.getElementById("result-display"),history=document.getElementById("history");
+let remainingFund = 200000;
+let isSpinning = false;
+let rotName = 0, rotGift = 0;
 
-function draw(id,items){
-const c=document.getElementById(id),ctx=c.getContext("2d"),num=items.length,arc=2*Math.PI/num;
-c.width=c.height=600;
-items.forEach((item,i)=>{
-const a=i*arc;ctx.beginPath();
-ctx.fillStyle=typeof item==="string"?(i%2?"#34495e":"#2c3e50"):item.color;
-ctx.moveTo(300,300);ctx.arc(300,300,290,a,a+arc);ctx.lineTo(300,300);ctx.fill();ctx.strokeStyle="rgba(255,255,255,.5)";ctx.stroke();
-ctx.save();ctx.translate(300,300);ctx.rotate(a+arc/2);
-ctx.textAlign="right";ctx.fillStyle="#fff";
-const t=typeof item==="string"?item:item.label;
-let fs=28;if(t.length>6)fs=22;if(t.length>10)fs=18;
-ctx.font=`bold ${fs}px Arial`;ctx.fillText(t,280,10);ctx.restore();
+function drawWheel(id, items) {
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext('2d');
+    const num = items.length;
+    const arc = (Math.PI * 2) / num;
+    canvas.width = 600; canvas.height = 600;
+
+    items.forEach((item, i) => {
+        const angle = i * arc;
+        // Vẽ miếng bánh
+        ctx.beginPath();
+        ctx.fillStyle = typeof item === "string" ? (i % 2 ? "#2c3e50" : "#34495e") : item.color;
+        ctx.moveTo(300, 300);
+        ctx.arc(300, 300, 290, angle, angle + arc);
+        ctx.lineTo(300, 300);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.stroke();
+
+        // Vẽ chữ (Đã sửa lỗi lệch)
+        ctx.save();
+        ctx.translate(300, 300);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        const text = typeof item === "string" ? item : item.label;
+        ctx.font = text.length > 8 ? "bold 20px Arial" : "bold 26px Arial";
+        ctx.fillText(text, 270, 10);
+        ctx.restore();
+    });
+}
+
+function pickWeightedItem(items) {
+    const totalProb = items.reduce((sum, item) => sum + item.prob, 0);
+    let random = Math.random() * totalProb;
+    for (let item of items) {
+        if (random < item.prob) return item;
+        random -= item.prob;
+    }
+    return items[0];
+}
+
+const btn = document.getElementById('spinBtn');
+const display = document.getElementById('result-display');
+const fundText = document.getElementById('fund-display');
+const historyBox = document.getElementById('history');
+
+function spin() {
+    if (isSpinning) return;
+    isSpinning = true;
+    btn.disabled = true;
+    display.innerHTML = "Đang quay...";
+
+    // 1. Chọn kết quả trước
+    const winnerNameIdx = Math.floor(Math.random() * names.length);
+    let winnerGift = pickWeightedItem(gifts);
+
+    // Kiểm tra quỹ tiền
+    if (winnerGift.value > remainingFund) {
+        winnerGift = { ...winnerGift, label: "Hết tiền -> Uống!", value: 0 };
+    }
+
+    // 2. Tính toán góc quay để mũi tên chỉ đúng ô đó
+    // Vòng quay Canvas bắt đầu từ 3h (0 rad), mũi tên ở 12h (270 độ)
+    const nameArc = 360 / names.length;
+    const giftArc = 360 / gifts.length;
+
+    const targetNameDeg = 270 - (winnerNameIdx * nameArc + nameArc / 2);
+    const targetGiftDeg = 270 - (gifts.indexOf(gifts.find(g => g.label === winnerGift.label)) * giftArc + giftArc / 2);
+
+    // Cộng thêm nhiều vòng để quay đẹp
+    rotName += (360 * 5) + (targetNameDeg - (rotName % 360) + 360) % 360;
+    rotGift += (360 * 8) + (targetGiftDeg - (rotGift % 360) + 360) % 360;
+
+    document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
+    document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
+
+    setTimeout(() => {
+        // Cập nhật quỹ tiền
+        if (winnerGift.value > 0) {
+            remainingFund -= winnerGift.value;
+            fundText.innerText = remainingFund.toLocaleString();
+        }
+
+        // Hiển thị kết quả
+        display.innerHTML = `<div class="res-name">${names[winnerNameIdx]}</div>
+                             <div style="color:#888; font-size:0.8rem">nhận ngay</div>
+                             <div class="res-gift">${winnerGift.label}</div>`;
+        
+        // Lưu lịch sử
+        const log = document.createElement('div');
+        log.innerHTML = `• <b>${names[winnerNameIdx]}</b>: ${winnerGift.label}`;
+        historyBox.prepend(log);
+
+        isSpinning = false;
+        btn.disabled = false;
+        if (navigator.vibrate) navigator.vibrate(200);
+    }, 5100);
+}
+
+// Khởi tạo
+document.addEventListener('DOMContentLoaded', () => {
+    drawWheel('canvasName', names);
+    drawWheel('canvasGift', gifts);
 });
-}
 
-function getWinnerIndex(rot,count){
-const deg=rot%360;
-return Math.floor(((360-deg+270)%360)/(360/count));
-}
-
-function startSpin(){
-if(isSpinning)return;
-isSpinning=true;btn.disabled=true;display.innerHTML="Đang quay...";
-document.getElementById("spinSound").play();
-rotName+=Math.random()*360+2160;
-rotGift+=Math.random()*360+2880;
-canvasName.style.transform=`rotate(${rotName}deg)`;
-canvasGift.style.transform=`rotate(${rotGift}deg)`;
-setTimeout(()=>{
-let nIdx;
-do{nIdx=getWinnerIndex(rotName,names.length)}while(nIdx===lastNameIndex);
-lastNameIndex=nIdx;
-const gIdx=getWinnerIndex(rotGift,gifts.length);
-display.innerHTML=`<div class="res-name">${names[nIdx]}</div><div style="color:#888">nhận ngay</div><div class="res-gift">${gifts[gIdx].label}</div>`;
-history.innerHTML+=`<div>• ${names[nIdx]} → ${gifts[gIdx].label}</div>`;
-document.getElementById("winSound").play();
-isSpinning=false;btn.disabled=false;
-},5100);
-}
-
-function editData(){
-const n=prompt("Nhập danh sách tên, cách nhau bởi dấu phẩy:");
-if(n){names.length=0;n.split(",").forEach(x=>names.push(x.trim()));draw("canvasName",names);}
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-draw("canvasName",names);draw("canvasGift",gifts);
-});
-btn.onclick=startSpin;
+btn.onclick = spin;
 </script>
 </body>
 </html>
