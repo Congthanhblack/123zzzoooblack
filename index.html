@@ -1,191 +1,196 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đệ Nhất Tửu Vương - Pro Max</title>
-    <style>
-        :root { --gold: #ffde00; --red: #e74c3c; --blue: #3498db; }
-        body { background: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        h1 { color: var(--gold); font-size: 1.4rem; text-transform: uppercase; margin: 15px 0; text-shadow: 0 0 10px rgba(255,222,0,.5); text-align: center; }
-        
-        .info-bar { display: flex; gap: 20px; margin-bottom: 10px; font-weight: bold; font-size: 0.9rem; color: #ccc; }
-        #fund-display { color: var(--gold); }
-
-        .container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
-        .wheel-box { position: relative; width: 300px; height: 300px; }
-        canvas { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #fff; transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); background: #222; }
-        
-        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 30px; height: 35px; background: #fff; clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
-        .label { margin-top: 8px; color: var(--gold); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
-
-        #result-display { margin-top: 20px; background: #1a1a1a; border: 1px solid #333; width: 85%; max-width: 450px; padding: 15px; border-radius: 12px; text-align: center; min-height: 70px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .res-name { color: var(--blue); font-size: 1.4rem; font-weight: bold; }
-        .res-gift { color: var(--red); font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
-
-        .controls { display: flex; gap: 10px; margin: 20px 0; }
-        #spinBtn { background: linear-gradient(180deg, var(--gold), #e6c200); color: #000; border: none; padding: 12px 40px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 222, 0, 0.3); }
-        #spinBtn:disabled { background: #444; color: #888; box-shadow: none; }
-        
-        #history { width: 85%; max-width: 450px; margin-top: 10px; font-size: 0.8rem; color: #888; border-top: 1px solid #333; padding-top: 10px; height: 100px; overflow-y: auto; }
-        @media(min-width: 768px){ .container { flex-direction: row; justify-content: center; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Đệ Nhất Tửu Vương – Party Mode v3</title>
+<style>
+body{background:#111;color:#fff;font-family:"Comic Sans MS",Segoe UI,Tahoma;margin:0;text-align:center}
+h1{color:#ffde00;margin:10px 0;text-shadow:0 0 10px rgba(255,222,0,.6)}
+.container{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.wheel-box{position:relative;width:280px}
+canvas{width:100%;border-radius:50%;border:4px solid #fff;transition:transform 5s cubic-bezier(.1,0,.1,1)}
+.pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+width:30px;height:30px;background:white;clip-path:polygon(50% 100%,0 0,100% 0)}
+.label{margin-top:6px;color:#ffde00;font-weight:bold}
+button{margin:6px;background:#ffde00;padding:10px 20px;border:none;
+border-radius:30px;font-size:1rem;font-weight:bold;cursor:pointer}
+button:disabled{background:#444;color:#777}
+.box{border:1px solid #333;border-radius:12px;padding:8px;margin:6px auto;
+max-width:500px;background:#1b1b1b}
+.scroll{max-height:140px;overflow-y:auto;font-size:.9rem;text-align:left}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+</style>
 </head>
 <body>
 
-<h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
-
-<div class="info-bar">
-    <span>Quỹ còn lại: <span id="fund-display">200,000</span>đ</span>
-</div>
+<h1>🤪🍻 ĐỆ NHẤT TỬU VƯƠNG – PARTY MODE 🍻🤪</h1>
 
 <div class="container">
-    <div class="wheel-box">
-        <div class="pointer"></div>
-        <canvas id="canvasName"></canvas>
-        <div class="label">Nạn nhân</div>
-    </div>
-    <div class="wheel-box">
-        <div class="pointer"></div>
-        <canvas id="canvasGift"></canvas>
-        <div class="label">Số phận</div>
-    </div>
+  <div class="wheel-box">
+    <div class="pointer"></div>
+    <canvas id="canvasName"></canvas>
+    <div class="label">🎯 Ai Xui Nhất Bàn?</div>
+  </div>
+  <div class="wheel-box">
+    <div class="pointer"></div>
+    <canvas id="canvasGift"></canvas>
+    <div class="label">🍺 Số Phận Phán Xét!</div>
+  </div>
 </div>
 
-<div id="result-display"><div id="status-text">Sẵn sàng! Nhấn QUAY để bắt đầu.</div></div>
+<button id="spinBtn">QUAY NGAY 🔥</button>
+<button onclick="undoLast()">⏪ Hoàn tác</button>
+<button onclick="editFund()">💰 Sửa quỹ</button>
 
-<div class="controls">
-    <button id="spinBtn">QUAY NGAY</button>
+<div class="box">💰 Quỹ còn lại: <span id="fundAmount">200</span>k</div>
+<div class="box" id="result">Sẵn sàng quẩy!</div>
+
+<div class="box">
+<h3>📜 Lịch sử drama</h3>
+<div id="history" class="scroll two-col"></div>
 </div>
 
-<div id="history"><b>Lịch sử:</b></div>
+<div class="box">
+<h3>🏆 VUA UỐNG – VUA SAY – TRÙM SÓNG GIÓ</h3>
+<div id="rank" class="scroll"></div>
+<div id="totalDrink"></div>
+</div>
 
 <script>
-// Cấu hình dữ liệu
-const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
-let gifts = [
-    { label: "Lì xì 20k", color: "#f1c40f", value: 20000, prob: 5 },
-    { label: "Uống 1 chén", color: "#e74c3c", value: 0, prob: 20 },
-    { label: "Qua lượt", color: "#3498db", value: 0, prob: 15 },
-    { label: "Lì xì 10k", color: "#f39c12", value: 10000, prob: 10 },
-    { label: "Chỉ định", color: "#8e44ad", value: 0, prob: 10 },
-    { label: "Uống 2 chén", color: "#c0392b", value: 0, prob: 10 },
-    { label: "Uống 1/2", color: "#e67e22", value: 0, prob: 15 },
-    { label: "Uống chéo", color: "#16a085", value: 0, prob: 10 }, // Mới
-    { label: "Cả bàn uống", color: "#95a5a6", value: 0, prob: 5 }   // Mới
+let names=["NCT","A Quả","C. Lan","A Thi","E Chinh","E Hòa","E An","E Chương","Sơn","Thao"];
+let gifts=[
+{label:"Uống 1 chén",color:"#e74c3c"},
+{label:"Uống 2 chén",color:"#c0392b"},
+{label:"Uống 1/2",color:"#e67e22"},
+{label:"Uống hộ",color:"#1abc9c"},
+{label:"Full ly 🤢",color:"#9b59b6"},
+{label:"Chỉ định 2 người",color:"#8e44ad"},
+{label:"Lì xì 10k",color:"#f39c12"},
+{label:"Lì xì 20k",color:"#f1c40f"},
+{label:"Qua lượt",color:"#3498db"}
 ];
 
-let remainingFund = 200000;
-let isSpinning = false;
-let rotName = 0, rotGift = 0;
+let rotN=0,rotG=0,isSpin=false;
+let fund=200;
+let history=[];
+let drinkCount={},lastAction=null;
 
-function drawWheel(id, items) {
-    const canvas = document.getElementById(id);
-    const ctx = canvas.getContext('2d');
-    const num = items.length;
-    const arc = (Math.PI * 2) / num;
-    canvas.width = 600; canvas.height = 600;
+names.forEach(n=>drinkCount[n]=0);
 
-    items.forEach((item, i) => {
-        const angle = i * arc;
-        // Vẽ miếng bánh
-        ctx.beginPath();
-        ctx.fillStyle = typeof item === "string" ? (i % 2 ? "#2c3e50" : "#34495e") : item.color;
-        ctx.moveTo(300, 300);
-        ctx.arc(300, 300, 290, angle, angle + arc);
-        ctx.lineTo(300, 300);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.2)";
-        ctx.stroke();
-
-        // Vẽ chữ (Đã sửa lỗi lệch)
-        ctx.save();
-        ctx.translate(300, 300);
-        ctx.rotate(angle + arc / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#fff";
-        const text = typeof item === "string" ? item : item.label;
-        ctx.font = text.length > 8 ? "bold 20px Arial" : "bold 26px Arial";
-        ctx.fillText(text, 270, 10);
-        ctx.restore();
-    });
-}
-
-function pickWeightedItem(items) {
-    const totalProb = items.reduce((sum, item) => sum + item.prob, 0);
-    let random = Math.random() * totalProb;
-    for (let item of items) {
-        if (random < item.prob) return item;
-        random -= item.prob;
-    }
-    return items[0];
-}
-
-const btn = document.getElementById('spinBtn');
-const display = document.getElementById('result-display');
-const fundText = document.getElementById('fund-display');
-const historyBox = document.getElementById('history');
-
-function spin() {
-    if (isSpinning) return;
-    isSpinning = true;
-    btn.disabled = true;
-    display.innerHTML = "Đang quay...";
-
-    // 1. Chọn kết quả trước
-    const winnerNameIdx = Math.floor(Math.random() * names.length);
-    let winnerGift = pickWeightedItem(gifts);
-
-    // Kiểm tra quỹ tiền
-    if (winnerGift.value > remainingFund) {
-        winnerGift = { ...winnerGift, label: "Hết tiền -> Uống!", value: 0 };
-    }
-
-    // 2. Tính toán góc quay để mũi tên chỉ đúng ô đó
-    // Vòng quay Canvas bắt đầu từ 3h (0 rad), mũi tên ở 12h (270 độ)
-    const nameArc = 360 / names.length;
-    const giftArc = 360 / gifts.length;
-
-    const targetNameDeg = 270 - (winnerNameIdx * nameArc + nameArc / 2);
-    const targetGiftDeg = 270 - (gifts.indexOf(gifts.find(g => g.label === winnerGift.label)) * giftArc + giftArc / 2);
-
-    // Cộng thêm nhiều vòng để quay đẹp
-    rotName += (360 * 5) + (targetNameDeg - (rotName % 360) + 360) % 360;
-    rotGift += (360 * 8) + (targetGiftDeg - (rotGift % 360) + 360) % 360;
-
-    document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
-    document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
-
-    setTimeout(() => {
-        // Cập nhật quỹ tiền
-        if (winnerGift.value > 0) {
-            remainingFund -= winnerGift.value;
-            fundText.innerText = remainingFund.toLocaleString();
-        }
-
-        // Hiển thị kết quả
-        display.innerHTML = `<div class="res-name">${names[winnerNameIdx]}</div>
-                             <div style="color:#888; font-size:0.8rem">nhận ngay</div>
-                             <div class="res-gift">${winnerGift.label}</div>`;
-        
-        // Lưu lịch sử
-        const log = document.createElement('div');
-        log.innerHTML = `• <b>${names[winnerNameIdx]}</b>: ${winnerGift.label}`;
-        historyBox.prepend(log);
-
-        isSpinning = false;
-        btn.disabled = false;
-        if (navigator.vibrate) navigator.vibrate(200);
-    }, 5100);
-}
-
-// Khởi tạo
-document.addEventListener('DOMContentLoaded', () => {
-    drawWheel('canvasName', names);
-    drawWheel('canvasGift', gifts);
+function draw(id,items){
+const c=document.getElementById(id),ctx=c.getContext("2d");
+c.width=c.height=500;
+let arc=2*Math.PI/items.length;
+items.forEach((it,i)=>{
+let a=i*arc;
+ctx.beginPath();
+ctx.fillStyle=typeof it==="string"?(i%2?"#34495e":"#2c3e50"):it.color;
+ctx.moveTo(250,250);
+ctx.arc(250,250,240,a,a+arc);
+ctx.fill();
+ctx.save();
+ctx.translate(250,250);
+ctx.rotate(a+arc/2);
+ctx.textAlign="right";
+ctx.fillStyle="#fff";
+ctx.font="bold 20px Comic Sans MS";
+ctx.fillText(typeof it==="string"?it:it.label,220,10);
+ctx.restore();
 });
+}
 
-btn.onclick = spin;
+function getIdx(rot,count){
+let deg=rot%360;
+return Math.floor(((360-deg+270)%360)/(360/count));
+}
+
+function startSpin(){
+if(isSpin)return;
+isSpin=true;spinBtn.disabled=true;
+let addN=Math.random()*360+2160;
+let addG=Math.random()*360+2880;
+rotN+=addN;rotG+=addG;
+canvasName.style.transform=`rotate(${rotN}deg)`;
+canvasGift.style.transform=`rotate(${rotG}deg)`;
+setTimeout(()=>{
+let ni=getIdx(rotN,names.length);
+let gi=getIdx(rotG,gifts.length);
+let name=names[ni],gift=gifts[gi].label;
+let addDrink=0,addFund=0;
+
+if(gift.includes("1 chén"))addDrink=1;
+if(gift.includes("2 chén"))addDrink=2;
+if(gift.includes("1/2"))addDrink=0.5;
+if(gift.includes("Full"))addDrink=2;
+if(gift.includes("Uống hộ")){
+  let target=prompt("😈 Bạn chọn ai uống hộ? Nhập tên:");
+  if(target && drinkCount[target]!=null){
+    name=target;
+    addDrink=1;
+  }
+}
+if(gift.includes("10k"))addFund=-10;
+if(gift.includes("20k"))addFund=-20;
+
+lastAction={name,gift,addDrink,addFund};
+
+drinkCount[name]+=addDrink;
+fund+=addFund;if(fund<0)fund=0;
+fundAmount.textContent=fund;
+
+history.unshift(`🤣 ${name} lãnh án: <b>${gift}</b>`);
+if(history.length>50)history.pop();
+
+render();
+isSpin=false;spinBtn.disabled=false;
+},5100);
+}
+
+function render(){
+result.innerHTML=`<b>${lastAction.name}</b> nhận <b>${lastAction.gift}</b>`;
+historyBox.innerHTML=history.map(h=>`<div>${h}</div>`).join("");
+renderRank();
+}
+
+function renderRank(){
+let arr=Object.entries(drinkCount).sort((a,b)=>b[1]-a[1]);
+rank.innerHTML=arr.map(([n,v],i)=>
+`<div>${i+1}. <b>${n}</b> – ${v} chén ${v>=8?"🥴":v>=5?"🤪":""}</div>`).join("");
+let total=arr.reduce((s,[,v])=>s+v,0);
+totalDrink.innerHTML=`📊 Tổng cả bàn: <b>${total}</b> chén`;
+}
+
+function undoLast(){
+if(!lastAction)return alert("Chưa có lượt để hoàn tác");
+let {name,addDrink,addFund}=lastAction;
+drinkCount[name]-=addDrink;
+fund-=addFund;
+fundAmount.textContent=fund;
+history.shift();
+lastAction=null;
+render();
+}
+
+function editFund(){
+let v=prompt("Nhập quỹ hiện tại (nghìn):",fund);
+let n=parseInt(v);
+if(!isNaN(n)&&n>=0){fund=n;fundAmount.textContent=fund;}
+}
+
+spinBtn.onclick=startSpin;
+const spinBtn=document.getElementById("spinBtn");
+const canvasName=document.getElementById("canvasName");
+const canvasGift=document.getElementById("canvasGift");
+const fundAmount=document.getElementById("fundAmount");
+const historyBox=document.getElementById("history");
+const result=document.getElementById("result");
+const rank=document.getElementById("rank");
+const totalDrink=document.getElementById("totalDrink");
+
+draw("canvasName",names);
+draw("canvasGift",gifts);
 </script>
+
 </body>
 </html>
